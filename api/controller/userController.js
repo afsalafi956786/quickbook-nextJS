@@ -47,6 +47,7 @@ export async function userCheck(req,res){
    }
 
   }catch(error){
+ 
     res.json({ status: "failed", message: error.message })
   }
    
@@ -98,6 +99,7 @@ export async function SignupValidate(req, res) {
       }
     }
   } catch (error) {
+    
     res.json({ status: "failed", message: error.message });
 }
 
@@ -119,7 +121,7 @@ export async function singninValidate(req,res){
                 const token=jwt.sign({userId},process.env.TOKEN_KEY,{expiresIn:'2h'})
                 res.json({'status':'success','message':'signin succecess',token:token})
             }else{
-              res.json({'status':'failed',message:'password is incorrect !'})
+              res.json({'status':'failed',message:'Incorrect password !'})
             }
         }else{
           res.json({status:'failed',message:'Email is not registered !'})
@@ -136,6 +138,7 @@ export async function userDataFetch(req,res){
      let userDetails=await userModel.findById(req.userId)
      res.json({userDetails,auth:true})
   }catch(error){
+    console.log(error.message)
     res.json({status:'failed',message:error.message})
   }
 }

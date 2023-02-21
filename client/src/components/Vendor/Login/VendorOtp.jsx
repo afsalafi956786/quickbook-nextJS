@@ -7,81 +7,106 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { userDatafetch } from '@/config/userEndpoints';
-import { useState,useContext,useEffect } from 'react';
-import { AuthContext } from '@/context/AuthContext';
-import { userSignup } from '@/config/userEndpoints';
 import { useRouter } from 'next/router';
+import { useState,useContext,useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { vendorSignup } from '@/config/venderEndpoints';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '@/context/AuthContext';
+import { vendorDatafetch } from '@/config/venderEndpoints';
+
+
+
 
 
 
 const theme = createTheme();
 
-export default function Otp() {
 
-  const router=useRouter();
-  const [otp,SetOtp]=useState('')
-  const {userDetails,setUserDetails} = useContext(AuthContext)
-const [otps,setOtps]=useState(false);
-const [otpErr,setOtpErr]=useState(false)
 
-  useEffect(()=>{
-    // function created for do await 
-        async function invoke(){
-        if(localStorage.getItem('usertoken')){
-          const data = await userDatafetch({'usertoken':localStorage.getItem('usertoken')})
-          if(data.status=='failed'){
-           if(userDetails){
+export default function VendorOtp() {
+    const router=useRouter();
 
-           }else{
-            router.push('/auth/signup')
-           }
-          }else if(data.auth){
-            router.push('/')
-          }else{
-            
-          }
-        }else{
-      
-        }
-        if(Object.keys(userDetails).length==0){
-            router.push('/auth/signup')
-        }else{
-          toast.warn('Do not refresh!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
-        }
-        }
-        invoke();
-      
-              
+    const [otp,SetOtp]=useState('');
+    const [otps,setOtps]=useState(false);
+    const [otpErr,setOtpErr]=useState(false)
+
+    const {vendorDetails,setVendorDetails}=useContext(AuthContext);
+
+
   
-      },[])
+    useEffect(()=>{
+        async function invoked(){
+            if(localStorage.getItem('vendortoken')){
+                const data=await vendorDatafetch({'vendortoken':localStorage.getItem('vendortoken')})
+                if(data.status=='failed'){
+                    if(vendorDetails){
 
-  const VerifyOtp = async (e) => {
+                    }else{
+                        router.push('/vendor/signup')
+                        
+                    }
+                   
+                }else if(data.auth){
+                    router.push('/vendor')
+                }else{
+
+                }
+            }else{
+
+            }
+            if(Object.keys(vendorDetails).length==0){
+                router.push('/vendor/signup')
+            }else{
+              toast.warn('Do not refresh!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+            }
+        }
+        invoked()
+
+    },[])
+
+
+let venderOtpVerify=async(e)=>{
     try{
-    e.preventDefault();
-    if(otp =='' || otp ===null){
-      console.log('ullik keri')
-      setOtps(true);
-      setOtpErr('please Enter the valid otp')
-     }else{
-      setOtps(false);
-      setOtpErr('')
-        await userDetails.otpVerify.confirm(otp)
-        const data= await userSignup(userDetails)
-        if(data.status=='success'){
-          localStorage.setItem('usertoken',data.token)
-          toast.success( `Wow! ${data?.message}`, {
+        e.preventDefault();
+         if(otp =='' || otp === null){
+            console.log('otp ulli keri check cheydu')
+            setOtps(true);
+            setOtpErr('please Enter a valid otp')
+         }else{
+            setOtps(false);
+            setOtpErr('');
+            await vendorDetails.otpChecking.confirm(otp)
+            const data=await vendorSignup (vendorDetails)
+            console.log(data)
+            if(data.status=='success'){
+                localStorage.setItem('vendortoken',data.token)
+                toast.success( `Wow! ${data?.message}`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    }); 
+                    router.push('/vendor')
+
+            }
+         }
+
+    }catch(error){
+        toast.error(`please Enter the valid otp`,{
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -90,32 +115,16 @@ const [otpErr,setOtpErr]=useState(false)
             draggable: true,
             progress: undefined,
             theme: "light",
-            }); 
-
-            router.push('/')
-        }
-      }
-      }catch(error){
-        toast.error(`please Enter the valid otp`,{
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          })
-        
-      }
-
+            })
+    }
     
+}
   
     // const data = new FormData(event.currentTarget);
     // localStorage.setItem('usertoken',data.token);  
     
 
-  };
+ 
 
   return (
     <ThemeProvider theme={theme}>
@@ -137,14 +146,14 @@ const [otpErr,setOtpErr]=useState(false)
           }}
         >   <Grid container sx={{justifyContent:'center',px:8}}>
         <Grid sx={{align:'center'}}>
-            <img src='/logo/otp.png'/>
+            <img className='h-[250px] w-[85%] sm:w-[85%] h-[200px]' src='/logo/venderotp.jpg'/>
             <Typography component="h1" variant="h5"  sx={{fontStyle:'-moz-initial',color:'GrayText',textAlign:'center'}}>
             Otp verification
           </Typography>
         </Grid>
           
           </Grid>
-          <Box component="form" noValidate onSubmit={VerifyOtp} sx={{ mt: 3,px:8 }}>
+          <Box component="form" noValidate onSubmit={venderOtpVerify} sx={{ mt: 3,px:8 }}>
             <Grid container spacing={2}>
             <Grid item xs={12}>
                 <TextField

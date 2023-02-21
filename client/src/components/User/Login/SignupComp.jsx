@@ -72,7 +72,7 @@ export default function SignUp() {
       recaptchaVerifier.render();
       return signInWithPhoneNumber(auth,mobile,recaptchaVerifier);
       }catch(error){
-        console.log(error);
+        console.log(error.message);
       }
      
     }
@@ -116,11 +116,7 @@ export default function SignUp() {
             const data=await  userSignupOtp(obj)
             console.log(data);
              if(data.status=='success'){
-              
-
               setUserDetails(obj)
-
-
                 toast.success( `Wow! ${data?.message}`, {
                     position: "top-center",
                     autoClose: 5000,
@@ -311,7 +307,7 @@ export default function SignUp() {
                  
                      
                  }catch(error){
-                  console.log(error.message)
+                  
     
                  }
               }}
@@ -348,15 +344,12 @@ export default function SignUp() {
                 </Grid>
             </Grid> 
             <Grid container justifyContent="flex-end ">
-            <Grid item sx={{display:'flex'}}>
-                <Box sx={{mr:1 , fontSize:'17px',fontStyle:'-moz-initial',color:'Gray'}}>
-                    <h3> Do you have a propery?</h3>
+              <Grid>
+                <Box  variant="body2" sx={{textDecoration:0,color:'black',mx:3,color:'gray' }}>
+                  Do you have a property? <Link href='/vendor/signup' style={{color:'#1976d2'}}> Click here</Link>
                 </Box>
-                <Link href="#" variant="body2" sx={{mt: 0.1 ,textDecoration:0,color:'black',color:'#1976d2',fontFamily:'initial',fontSize:'17px'}}>
-                  <p>Click here</p> 
-                </Link>
               </Grid>
-              </Grid>
+            </Grid>
 
             </Grid>
           </Box>

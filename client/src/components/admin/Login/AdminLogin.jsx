@@ -11,37 +11,37 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState,useEffect } from 'react';
-import { userSignin,userDatafetch } from '@/config/userEndpoints';
 import { useRouter } from 'next/router';
+import { adminSignin } from '@/config/AdminEndpoint';
 
 
 const theme = createTheme();
 
-export default function Signin() {
+export default function AdminLogin() {
   const router=useRouter()
    const [email,setEmail]=useState(false)
    const [emailErr,setEmailErr]=useState(false)
    
  
-   useEffect(()=>{
-    async function invokeForAwait(){
-        if(localStorage.getItem('usertoken')){
-    const data=await userDatafetch({'usertoken':localStorage.getItem('usertoken')})
-    console.log(data)
-    if(data.status=='failed'){
-      router.push('/auth')
-    }else if(data.auth){
-      router.push('/')
-    }
-  }else{
-    router.push('/auth')
-  }
-    }
-    invokeForAwait()
+//    useEffect(()=>{
+//     async function invokeForAwait(){
+//         if(localStorage.getItem('usertoken')){
+//     const data=await userDatafetch({'usertoken':localStorage.getItem('usertoken')})
+//     console.log(data)
+//     if(data.status=='failed'){
+//       router.push('/auth')
+//     }else if(data.auth){
+//       router.push('/')
+//     }
+//   }else{
+//     router.push('/auth')
+//   }
+//     }
+//     invokeForAwait()
 
     
 
-   },[])
+//    },[])
 
 
   const handleSubmit = async (event) => {
@@ -59,10 +59,10 @@ export default function Signin() {
       if(logEmail.test(obj.email)){
         setEmail(false);
         setEmailErr("")
-        const data=await userSignin(obj)
+        const data=await adminSignin(obj)
         console.log(data)
         if(data.status=='success'){
-          localStorage.setItem('usertoken',data.token)
+          // localStorage.setItem('usertoken',data.token)
           toast.success( `Wow! ${data?.message}`, {
             position: "top-center",
             autoClose: 5000,
@@ -126,6 +126,7 @@ export default function Signin() {
             paddingLeft:4,
             paddingRight:4,
             paddingTop:6,
+            paddingBottom:4,
             boxShadow:4,
             borderColor:'grey.500',
             borderRadius:0,
@@ -133,7 +134,7 @@ export default function Signin() {
           }}
         >   <Grid container>
           <Typography component="h1" variant="h5" align='left' sx={{fontStyle:'-moz-initial',color:'GrayText'}}>
-            Signin your Account
+            Admin Signin
           </Typography>
           </Grid>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -172,16 +173,9 @@ export default function Signin() {
             >
               Sign in
             </Button>
-            <Grid container justifyContent="flex-start ">
-              <Grid>
-                <Box variant="body2" sx={{textDecoration:0,color:'black',mx:3,color:'gray'}}>
-                  Already have an account?
-                   <Link href='/auth/signup' style={{color:'#1976d2'}}> Click here</Link>
-                </Box>
-              </Grid>
-            </Grid>
             
-             <Grid item xs={12} sx={{ display:'flex' }}>
+            
+             <Grid item xs={12} sx={{ display:'flex',mt:2 }}>
                 <Grid item xs={6} sx={{ mr:2,mx:2,mb:3 }}>
                 <hr/>
                 </Grid>
@@ -190,14 +184,7 @@ export default function Signin() {
                 </Grid>
             </Grid> 
            
-            <Grid container justifyContent="flex-end ">
-              <Grid>
-                <Box variant="body2" sx={{textDecoration:0,color:'black',mx:3,color:'gray'}}>
-                  Do you have a property?
-                   <Link href='/vendor/signup' style={{color:'#1976d2'}}> Click here</Link>
-                </Box>
-              </Grid>
-            </Grid>
+            
 
             </Grid>
           </Box>

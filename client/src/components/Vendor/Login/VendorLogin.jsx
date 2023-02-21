@@ -10,89 +10,70 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState,useEffect } from 'react';
-import { userSignin,userDatafetch } from '@/config/userEndpoints';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { vendorLogin } from '@/config/venderEndpoints';
+
 
 
 const theme = createTheme();
 
-export default function Signin() {
+export default function  VendorLogin() {
   const router=useRouter()
-   const [email,setEmail]=useState(false)
-   const [emailErr,setEmailErr]=useState(false)
+
+  const [email,setEmail]=useState(false);
+  const [emailErr,setEmailErr]=useState(false)
+
    
  
-   useEffect(()=>{
-    async function invokeForAwait(){
-        if(localStorage.getItem('usertoken')){
-    const data=await userDatafetch({'usertoken':localStorage.getItem('usertoken')})
-    console.log(data)
-    if(data.status=='failed'){
-      router.push('/auth')
-    }else if(data.auth){
-      router.push('/')
-    }
-  }else{
-    router.push('/auth')
-  }
-    }
-    invokeForAwait()
-
-    
-
-   },[])
+ 
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    
     let obj={
       email:data.get('email'),
       password:data.get('password')
     }
-    
-    
+    console.log(obj)
+
     if(obj.email && obj.password){
-      let logEmail=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-      if(logEmail.test(obj.email)){
-        setEmail(false);
-        setEmailErr("")
-        const data=await userSignin(obj)
-        console.log(data)
-        if(data.status=='success'){
-          localStorage.setItem('usertoken',data.token)
-          toast.success( `Wow! ${data?.message}`, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            }); 
-           
-           router.push('/')
+      let loginEmail=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if(loginEmail.test(obj.email)){
+             setEmail(false);
+             setEmailErr('')
+             const data=await vendorLogin(obj)
+             console.log(data)
+             if(data.status=='success'){
+              localStorage.setItem('vendortoken',data.token)
+              toast.success( `Wow! ${data?.message}`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                }); 
+                router.push('/vendor')
 
-        }else{
-          toast.error(`OOPS! ${data?.message}`,{
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            })
-        }
-        
-
+             }else{
+              toast.error(`OOPS! ${data?.message}`,{
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                })
+             }
       }else{
         setEmail(true);
-        setEmailErr('please enter a valid email address')
+        setEmailErr('Please enter valid email !')
       }
 
 
@@ -108,8 +89,7 @@ export default function Signin() {
         theme: "light",
         });
     }
-
-
+    
   };
 
   return (
@@ -133,7 +113,7 @@ export default function Signin() {
           }}
         >   <Grid container>
           <Typography component="h1" variant="h5" align='left' sx={{fontStyle:'-moz-initial',color:'GrayText'}}>
-            Signin your Account
+          Vendor Login
           </Typography>
           </Grid>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -144,9 +124,9 @@ export default function Signin() {
                   fullWidth
                   id="email"
                   label="Email Address"
-                  name="email"
                   error={email}
                   helperText={emailErr}
+                  name="email"
                   autoComplete="email"
                 />
               </Grid>
@@ -175,8 +155,8 @@ export default function Signin() {
             <Grid container justifyContent="flex-start ">
               <Grid>
                 <Box variant="body2" sx={{textDecoration:0,color:'black',mx:3,color:'gray'}}>
-                  Already have an account?
-                   <Link href='/auth/signup' style={{color:'#1976d2'}}> Click here</Link>
+                  Create Account ?
+                   <Link href='/vendor/signup' style={{color:'#1976d2'}}> Click here</Link>
                 </Box>
               </Grid>
             </Grid>
@@ -189,15 +169,9 @@ export default function Signin() {
                 <hr/>     
                 </Grid>
             </Grid> 
-           
-            <Grid container justifyContent="flex-end ">
-              <Grid>
-                <Box variant="body2" sx={{textDecoration:0,color:'black',mx:3,color:'gray'}}>
-                  Do you have a property?
-                   <Link href='/vendor/signup' style={{color:'#1976d2'}}> Click here</Link>
-                </Box>
-              </Grid>
-            </Grid>
+
+            
+            
 
             </Grid>
           </Box>

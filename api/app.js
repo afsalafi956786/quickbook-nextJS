@@ -5,8 +5,9 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 dotenv.config();
 import userRouter from './routes/users.js';
-// import adminRouter from './routes/admin.js'
-// import venderRouter from './routes/vendor.js'
+import adminRouter from './routes/admin.js'
+import venderRouter from './routes/vendor.js';
+
 
 
 const port=process.env.PORT
@@ -29,7 +30,8 @@ app.use(express.static("public"))
 
 //routes
 app.use('/',userRouter);
-// app.use('/vendor',venderRouter);
+app.use('/vendor',venderRouter);
+app.use('/admin',adminRouter)
 // app.use('/admin',adminRouter);
 
 
