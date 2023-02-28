@@ -36,7 +36,7 @@ const logout=()=>{
             height="80"
           />
 
-<form className="lg:w-[58%] lg:ml-2 md:w-[58%] md:px-8 md:-ml-9 sm:w-[58%] xs:w-[50%] xs:-ml-10 ">   
+<form className="lg:w-[62%] lg:ml-2 md:w-[58%] md:px-8 md:-ml-9 sm:w-[58%] xs:w-[50%] xs:-ml-10 ">   
     <label for="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div className="relative">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -47,46 +47,32 @@ const logout=()=>{
     </div>
 </form>
 
-          <div className="text-black">
-      {!user &&
-        <ul className="flex hover:border h-16 w-40 hover:bg-slate-50 ">
-         
-              <p
-              href="#"
-              className="text-stone-700 cursor-pointer mt-5 ml-12"
-            >
-              Login/
-            </p> 
-     
-         
-            <p href="#" className="text-stone-700 cursor-pointer ml-1 mt-5">
-              Signup
-            </p>
-          </ul>
+   
           
 
           
-     }
+   
+          <LogoutIcon onClick={logout} className="xs:ml-2 ml-auto -ml-1 h-24 w-22 cursor-pointer"/>
+         
 
 {user &&
-        <div className="flex">
-          <LogoutIcon onClick={logout} className="lg:h-[30px] lg:md:mt-4 lg:md:w-[15%] cursor-pointer hover:text-gray-500 xs:mt-5"/>
+        
 
-        <ul className="flex hover:border xs:w-[100%] h-16 w-40 hover:bg-slate-50 text-sky-600 hover:bg-gray-100 ">
-           
+        <div className="flex hover:border xs:w-[20%] space-x-3 lg:md:w-[10%] xs:w-[100%] h-16 w-40 hover:bg-slate-50 text-sky-600 hover:bg-gray-100 p-2">
+            <PersonIcon className="mt-5 cursor-pointer "  />
               <p
               href="#" 
-              className=" text-stone-700 cursor-pointer mt-5 ml-12 font-bold text-lg text-sky-700 "
+              className="  cursor-pointer mt-5 font-bold text-lg text-sky-700 "
             >
-               <PersonIcon className=""  />
+              
              {user?.name}
             </p> 
            
-          </ul>
-           </div>
+          </div>
+          
           
      }
-          </div>
+         
         </div>
 
       </div>

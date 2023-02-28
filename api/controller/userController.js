@@ -142,3 +142,4 @@ export async function userDataFetch(req,res){
     res.json({status:'failed',message:error.message})
   }
 }
+

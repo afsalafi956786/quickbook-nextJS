@@ -36,6 +36,10 @@ const vendorSchema=new mongoose.Schema({
         required:true,
         trim:true,
     },
+    image:{
+        type:String,
+
+    },
     isBanned:{
         type:Boolean,default:false
     }

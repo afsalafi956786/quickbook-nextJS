@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from 'next/link';
+// import Link from 'next/link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -12,7 +12,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState,useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { adminSignin } from '@/config/AdminEndpoint';
+import { adminSignin,adminData } from '@/config/AdminEndpoint';
+
 
 
 const theme = createTheme();
@@ -23,25 +24,25 @@ export default function AdminLogin() {
    const [emailErr,setEmailErr]=useState(false)
    
  
-//    useEffect(()=>{
-//     async function invokeForAwait(){
-//         if(localStorage.getItem('usertoken')){
-//     const data=await userDatafetch({'usertoken':localStorage.getItem('usertoken')})
-//     console.log(data)
-//     if(data.status=='failed'){
-//       router.push('/auth')
-//     }else if(data.auth){
-//       router.push('/')
-//     }
-//   }else{
-//     router.push('/auth')
-//   }
-//     }
-//     invokeForAwait()
+   useEffect(()=>{
+    async function invokeForAwait(){
+        if(localStorage.getItem('admintoken')){
+    const data=await adminData ({'admintoken':localStorage.getItem('admintoken')})
+    console.log(data)
+    if(data.status=='failed'){
+      router.push('/admin/signin')
+    }else if(data.auth){
+      router.push('/admin')
+    }
+  }else{
+    router.push('/admin/signin')
+  }
+    }
+    invokeForAwait()
 
     
 
-//    },[])
+   },[])
 
 
   const handleSubmit = async (event) => {
@@ -62,7 +63,7 @@ export default function AdminLogin() {
         const data=await adminSignin(obj)
         console.log(data)
         if(data.status=='success'){
-          // localStorage.setItem('usertoken',data.token)
+          localStorage.setItem('admintoken',data.token)
           toast.success( `Wow! ${data?.message}`, {
             position: "top-center",
             autoClose: 5000,
@@ -74,7 +75,7 @@ export default function AdminLogin() {
             theme: "light",
             }); 
            
-           router.push('/')
+           router.push('/admin')
 
         }else{
           toast.error(`OOPS! ${data?.message}`,{
@@ -114,6 +115,7 @@ export default function AdminLogin() {
 
   return (
     <ThemeProvider theme={theme}>
+    <ToastContainer />
     <ToastContainer />
       <Container sx={{ paddingBottom:'4%' }} component="main" maxWidth="sm">
         <CssBaseline />
@@ -158,6 +160,7 @@ export default function AdminLogin() {
                   name="password"
                   required
                   fullWidth
+                  type='password'
                   id="password"
                   label="Password"
                   autoFocus

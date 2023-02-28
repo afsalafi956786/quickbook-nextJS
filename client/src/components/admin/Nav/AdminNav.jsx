@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
-// import Link from "next/link";
+import Link from "next/link";
 
-function Navbar() {
+function AdminNav() {
   return (
     <>
       <div className=" w-full h-20 shadow-lg z-[100] ">
@@ -19,4 +19,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default AdminNav;

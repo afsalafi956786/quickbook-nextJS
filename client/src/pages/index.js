@@ -11,6 +11,8 @@ import Plan from '@/components/User/Home/Plan'
 import Room from '@/components/User/Home/Rooms'
 import Footer from '@/components/User/Home/Footer'
 import HomePage from '@/components/User/Home/HomePage';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 
 
@@ -32,8 +34,25 @@ export default function Home() {
          setUser(data.userDetails)
           if(data.status=='failed'){
             router.push('/auth')
+            
           }else if(data.auth){
-            router.push('/')
+              if(data?.userDetails?.isBanned){
+                toast.error(`OOPS! all fields are required`, {
+                  position: "top-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                  });
+
+                router.push('/auth')
+              }else{
+                router.push('/')
+              }
+           
           }
         }else{
           router.push('/auth')
@@ -52,7 +71,9 @@ export default function Home() {
     
 <HomeNav  user={user} />
     <div className='container p-[15px]  mx-auto relative'>  
+    <ToastContainer />
        <Booking/> 
+       {/* <Newnav/> */}
     </div>
     <Plan/>
 
@@ -66,7 +87,7 @@ export default function Home() {
             </div>
 
         </div>
-
+          
     </section>
   <Room/>
   <Footer/>

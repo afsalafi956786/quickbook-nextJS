@@ -3,9 +3,8 @@ import React from 'react'
 function SideBar() {
   return (
     <>
-        <div class="min-h-screen flex items-start justify-start">
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 p-5">
-            <div className='col-span-1 px-4 pb-6 shadow rounded overflow-hidden  shadow-lg'>
+               
+            <div className=' sm:hidden xs:hidden  xl:lg:md:block  lg:w-[35%] ml-12 border px-4 pb-6 shadow rounded overflow-hidden  shadow-lg'>
     
                 <div className='divide-y divide-gray-200 space-y-5 border-l-0'>
                     <div>
@@ -41,6 +40,10 @@ function SideBar() {
                                 <label className='text-gray-600 ml-3 cursor-pointer'>AC</label>
                                 <div className='ml-auto text-gray-600 text-sm'>(15)</div>
                             </div>
+                            <div className='flex items-center'>
+                               <button className='bg-sky-600 p-1 font-extrabold rounded text-white px-4 hover:bg-sky-800'>Filter</button>
+                                <div className='ml-auto text-gray-600 text-sm'>(15)</div>
+                            </div>
 
                         </div>
                     </div>
@@ -73,6 +76,9 @@ function SideBar() {
                                 <label className='text-gray-600 ml-3 cursor-pointer'>Family Room</label>
                                 <div className='ml-auto text-gray-600 text-sm'>(15)</div>
                             </div>
+                            <div className='flex items-center'>
+                               <button className='bg-sky-600 p-1 font-extrabold rounded text-white px-4 hover:bg-sky-800'>Filter</button>
+                            </div>
                         </div>
                     </div>
 
@@ -84,6 +90,11 @@ function SideBar() {
                         <span className=' mx-2 text-gray-500 '>-</span>
                         <input type='text' className=' border border-gray-300 py-1 text-gray-500 text-sm shadow-md' placeholder='max'/>
                     </div>
+                    <div className='flex items-center mt-4'>
+                               <button className='bg-sky-600 p-1 font-extrabold rounded text-white px-4 hover:bg-sky-800'>Filter</button>
+                                <div className='ml-auto text-gray-600 text-sm'>(15)</div>
+                            </div>
+          
                     </div>
 
                     <div className='pt-4'>
@@ -99,6 +110,10 @@ function SideBar() {
                                 <label className='text-gray-600 ml-3 cursor-pointer'>Home stays</label>
                                 <div className='ml-auto text-gray-600 text-sm'>(15)</div>
                             </div>
+                            <div className='flex items-center'>
+                               <button className='bg-sky-600 p-1 font-extrabold rounded text-white px-4 hover:bg-sky-800'>Filter</button>
+                               
+                            </div>
 
                         </div>
                     </div>
@@ -108,8 +123,8 @@ function SideBar() {
 
             </div>
 
-        </div>
-    </div>
+        
+
     </>
   )
 }

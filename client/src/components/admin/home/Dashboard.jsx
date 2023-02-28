@@ -1,13 +1,13 @@
 import React from 'react'
-import ArticleIcon from '@mui/icons-material/Article';
+// import ArticleIcon from '@mui/icons-material/Article';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import RecentBook from './RecentBook';
 
-function MainDash() {
+
+function Dashboard() {
   return (
     <div className=''>
-        <h1 className='lg:md:mt-4 lg:md:-ml-1 sm:ml-24 xs:ml-16'>Dashboard</h1>
+        <h1 className='lg:md:mt-4 lg:md:-ml-1 sm:ml-24 xs:ml-16'>hai board</h1>
         <div className='flex justify-evenly  mt-12 lg:flex-row lg:flex-row flex-col md:space-y-3 xs:space-y-3 sm:items-center xs:items-center'>
       
     
@@ -16,7 +16,7 @@ function MainDash() {
            <CircularProgressbar className='' value='434' text='30%'/>
         </div>
         <div className='ml-8'>
-          <h4 className=''>Bookings</h4>
+          <h4 className=''>Users</h4>
              </div>
              <div className='py-10 -ml-16'>
                   <span className='text-lg font-semibold'>total:233</span>
@@ -45,7 +45,7 @@ function MainDash() {
            <CircularProgressbar className='' value='434' text='30%'/>
         </div>
         <div className='ml-8'>
-          <h4 className=''>Customers</h4>
+          <h4 className=''>Properties</h4>
              </div>
              <div className='py-10 -ml-16'>
                   <span className='text-lg font-semibold'>total:233</span>
@@ -56,9 +56,9 @@ function MainDash() {
 
     </div>
     
-     <RecentBook/>
+   
     </div>
   )
 }
 
-export default MainDash
+export default Dashboard

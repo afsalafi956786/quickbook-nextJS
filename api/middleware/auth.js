@@ -52,7 +52,7 @@ export async function vendorJWT(req,res,next){
 }
 
 
-export async function adminJwt(req,res){
+export async function adminJwt(req,res,next){
     const token=req.headers['admintoken']
     if(!token){
         res.json({'status':'failed','message':'You need a token'})

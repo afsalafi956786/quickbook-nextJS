@@ -138,6 +138,7 @@ export default function  VendorLogin() {
                   required
                   fullWidth
                   id="password"
+                  type='password'
                   label="Password"
                   autoFocus
                 />
