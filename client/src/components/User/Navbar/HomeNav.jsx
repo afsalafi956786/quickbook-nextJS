@@ -6,8 +6,11 @@ import PersonIcon from '@mui/icons-material/Person';
 import swal from "sweetalert";
 import Router, { useRouter } from "next/router";
 import LogoutIcon from '@mui/icons-material/Logout';
-function HomeNav({user}) {
+import { useSelector } from "react-redux";
+
+function HomeNav() {
 const router=useRouter();
+let user=useSelector((state)=>state.users.value)
 const logout=()=>{
   swal({
     title: "Are you sure?",
@@ -26,17 +29,17 @@ const logout=()=>{
 
   return (
     <>
-      <div className=" w-full h-28 shadow-lg bg-slate-50 ">
+      <div className=" w-full h-28 shadow-lg bg-slate-50 fixed">
         
         <div className="flex justify-between items-center w-full h-full px-2 2xl:px-16">
           <Image
             src="/logo/qb.png"
             alt="/"
             width="150"
-            height="80"
+            height="80"c
           />
 
-<form className="lg:w-[62%] lg:ml-2 md:w-[58%] md:px-8 md:-ml-9 sm:w-[58%] xs:w-[50%] xs:-ml-10 ">   
+{/* <form className="lg:w-[62%] lg:ml-2 md:w-[58%] md:px-8 md:-ml-9 sm:w-[58%] xs:w-[50%] xs:-ml-10 ">   
     <label for="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div className="relative">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -45,20 +48,18 @@ const logout=()=>{
         <input type="search" id="default-search"  className="block border w-full p-4 pl-10 text-sm  border-gray-300  bg-gray-50  border-gray-00 dark:placeholder-gray-400   " placeholder="Search Mockups, Logos..." required/>
         <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-sky-600 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-sky-600  ">Search</button>
     </div>
-</form>
+</form> */}
 
    
-          
-
-          
+        
    
-          <LogoutIcon onClick={logout} className="xs:ml-2 ml-auto -ml-1 h-24 w-22 cursor-pointer"/>
+          <LogoutIcon onClick={logout} className=" ml-auto   h-24 w-22 cursor-pointer"/>
          
 
 {user &&
         
 
-        <div className="flex hover:border xs:w-[20%] space-x-3 lg:md:w-[10%] xs:w-[100%] h-16 w-40 hover:bg-slate-50 text-sky-600 hover:bg-gray-100 p-2">
+        <div className="flex hover:border xs:w-[20%] ml-12 space-x-3 lg:md:w-[10%] xs:w-[100%] h-16 w-50 hover:bg-slate-50 text-sky-600 hover:bg-gray-100 p-2">
             <PersonIcon className="mt-5 cursor-pointer "  />
               <p
               href="#" 

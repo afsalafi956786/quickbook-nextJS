@@ -54,7 +54,7 @@ function Properties({setRefresh,refresh}) {
                         <span className="text-gray-700 font-bold">Category : </span> {rooms?.category}
                       </p>
                       <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-700 font-bold">Location : </span> {rooms?.vendorId?.propertyLocation}
+                        <span className="text-gray-700 font-bold">Location : </span> {rooms?.location}
                       
                       </p>
                       <p className="text-sm leading-none text-gray-800">
@@ -148,7 +148,7 @@ function Properties({setRefresh,refresh}) {
 
                       }}
 
-                       className=" p-1 rounded px-3 font-semibold bg-red-600 leading-6 text-white">
+                       className=" p-1 rounded hover:bg-red-800 px-3 font-semibold bg-red-600 leading-6 text-white">
                       Block
                     </button>
                     )

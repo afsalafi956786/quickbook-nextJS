@@ -5,6 +5,8 @@ import { useEffect,useState } from 'react'
 import { vendorDatafetch,roomViewData } from '@/config/venderEndpoints'
 import Router, { useRouter } from 'next/router'
 import RoomView from '@/components/Vendor/Home/RoomView'
+import { useDispatch } from 'react-redux'
+import {vendor} from '@/store/vendor'
 
 
 
@@ -12,14 +14,15 @@ function rooms() {
 
 
     const router=useRouter();
-    const [vendor,setVendor]=useState('')
+    let dispatch=useDispatch()
     const[roomData,setRoomData]=useState([])
     const [refresh, setRefresh] = useState(false)
     useEffect(()=>{
         async function invoke(){
             if(localStorage.getItem('vendortoken')){
                 const data=await vendorDatafetch ({'vendortoken':localStorage.getItem('vendortoken')})
-                setVendor(data.vendorDetails)
+                // setVendor(data.vendorDetails)
+                dispatch(vendor(data.vendorDetails))
                 if(data.status =='failed'){
                     router.push('/vendor/login')
                 }else if(data.auth){
@@ -47,9 +50,9 @@ function rooms() {
 
   return (
     <>
-    <VendorNav vendor={vendor}/>
+    <VendorNav />
 
-<div className='md:lg:h-auto xs:h-auto  flex bg-gray-100 items-center'>
+<div className='md:lg:h-auto xs:h-auto   flex bg-gray-100 items-center'>
  <div className='grid mb-4 h-[97%] w-[97%] sm:mt-4 xs:mt-4 rounded bg-white   xs:grid-cols-1 overflow-hidden lg:md:grid-cols-[13rem_auto] mx-6 gap-[10px] lg:md:grid-cols-[20% auto]'>
    <SideBar className='bg-gray-300'/>
    <RoomView roomData={roomData} setRefresh={setRefresh} refresh={refresh}/>

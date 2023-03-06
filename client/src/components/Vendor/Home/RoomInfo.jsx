@@ -99,8 +99,8 @@ function RoomInfo({room}) {
              <div className="mt-3">Capacity: {room?.capacity} </div>
              <div className="mt-3">Price: {room?.price} </div>
              <div className="mt-3">Toatl Rooms: {room?.totalrooms} </div>
-             <div className="mt-3">Location: {room?.vendorId?.propertyLocation} </div>
-             <div className="mt-3">city: {room?.city} </div>
+             <div className="mt-3">Location: {room?.location} </div>
+             <div className="mt-3">city: {room?.location} </div>
              <div className="mt-3">Zip: {room?.zip} </div>
              <div className="mt-3">State: {room?.state} </div>
              <div className="mt-3">Adult Rate: {room?.AdultsRate} </div>

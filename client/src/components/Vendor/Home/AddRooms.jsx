@@ -2,31 +2,60 @@ import React from "react";
 import Multiselect from "multiselect-react-dropdown";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { storage } from "@/config/firebase/firebase";
 import { addRoom } from "@/config/venderEndpoints";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { maptoken } from "@/constance/constance";
 import Router, { useRouter } from "next/router";
-
+import { mapboxGeo } from "@/constance/constance";
+import ClearIcon from "@mui/icons-material/Clear";
 
 function AddRooms() {
-    const router=useRouter();
-//   const { useState } = React;
+  mapboxgl.accessToken = maptoken;
+  const router = useRouter();
+  //   const { useState } = React;
   const [files, setFile] = useState([]);
   const [message, setMessage] = useState();
-  const [aminites,setAmenities]=useState(null)
-  const [image,setImage]=useState([])
-  const [urls,setUrls]=useState([])
+  const [aminites, setAmenities] = useState(null);
+  const [image, setImage] = useState([]);
+  const [urls, setUrls] = useState([]);
+
+  const [place, setPlace] = useState(null);
+  const [suggestion, setSuggestion] = useState([]);
+  const [plongitude, setLongitude] = useState("76.2673");
+  const [platitude, setLatitude] = useState("9.9312");
+  const [clear, setClear] = useState("");
+
+  //map useeffect map code
+  useEffect(() => {
+    const map = new mapboxgl.Map({
+      container: "maps",
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [plongitude, platitude],
+      zoom: 8,
+    });
+    const coordinates = [plongitude, platitude];
+    addToMap(map, coordinates);
+  }, [plongitude, platitude]);
+  const addToMap = (map, coordinates) => {
+    const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+    console.log(marker);
+  };
+
+  //image add code
   const handleFile = (e) => {
     setMessage("");
-    const ingList=Array.from(e.target.files)
-    setImage(ingList)
+    const ingList = Array.from(e.target.files);
+    setImage(ingList);
     for (let i = 0; i < ingList.length; i++) {
       const fileType = ingList[i]["type"];
       const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
       if (validImageTypes.includes(fileType)) {
         setFile([...files, ingList[i]]);
-        
+
         // console.log(imgList)
       } else {
         setMessage("This image formate not supported");
@@ -39,65 +68,91 @@ function AddRooms() {
   };
 
   function onAmenities(val, changeVal) {
-   setAmenities(val)
+    setAmenities(val);
   }
 
+  //map box search box
+  const handleInput = async (event) => {
+    console.log("vannu");
+    setPlace(null);
+    const places = event.target.value;
+    console.log(places);
+    if (!places) {
+      setSuggestion([]);
+      return;
+    }
+    const url = `${mapboxGeo}/${encodeURIComponent(
+      places
+    )}.json?access_token=${maptoken}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    setSuggestion(data.features.map((f) => f.place_name));
+  };
+
+  const handlePickup = async (suggestion) => {
+    const pla = suggestion;
+    setPlace(pla);
+    setSuggestion([]);
+    const url = `${mapboxGeo}/${suggestion}.json?limit=1&access_token=${maptoken}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const longitude = data.features[0].geometry.coordinates[0];
+    const latitude = data.features[0].geometry.coordinates[1];
+    setLongitude(longitude);
+    setLatitude(latitude);
+  };
+
+  //end map box
 
   const submiHandler = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-   if(image){
-    for(let i=0;i<image.length;i++){
-        let dir=Date.now();
-        let rand=Math.random();
-        let img=image[i]
-        const imageRef=ref(storage,`posts/${dir}${rand}/${img?.name}`);
-        const toBAse64=  (img)=>
-            new Promise((resolve,reject)=>{
-                const reader=new FileReader();
-                reader.readAsDataURL(img);
-                reader.onload=()=>resolve(reader.result)
-                reader.onerror=(error)=>reject(error);
-            }).catch((err)=>{
-                console.log(err)
-            })
-            const imgBase=await toBAse64(img)
-            await uploadString(imageRef,imgBase , 'data_url').then(async()=>{
-               const downloadURL=await getDownloadURL(imageRef);
-               urls.push(downloadURL)
-            })
-        
-
+    if (image) {
+      for (let i = 0; i < image.length; i++) {
+        let dir = Date.now();
+        let rand = Math.random();
+        let img = image[i];
+        const imageRef = ref(storage, `posts/${dir}${rand}/${img?.name}`);
+        const toBAse64 = (img) =>
+          new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(img);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+          }).catch((err) => {
+            console.log(err);
+          });
+        const imgBase = await toBAse64(img);
+        await uploadString(imageRef, imgBase, "data_url").then(async () => {
+          const downloadURL = await getDownloadURL(imageRef);
+          urls.push(downloadURL);
+        });
+      }
+    } else {
     }
-   }else{
-
-   }
-
-   
 
     let obj = {
       property: data.get("property"),
-      roomNo:data.get('roomNo'),
+      roomNo: data.get("roomNo"),
       price: data.get("price"),
       adultRate: data.get("adultRate"),
-      OneRoom:data.get('oneRoom'),
-      capacity:data.get('capacity'),
+      OneRoom: data.get("oneRoom"),
+      capacity: data.get("capacity"),
       address: data.get("address"),
       city: data.get("city"),
       state: data.get("state"),
       zip: data.get("zip"),
-      description:data.get('description'),
-      amenities:aminites,
-      image:urls,
+      description: data.get("description"),
+      amenities: aminites,
+      image: urls,
       category: data.get("category"),
       parking: data.get("parking"),
       swimminPool: data.get("swimmingPool"),
-
-     
+      location: place,
+      longitude: plongitude,
+      latitude: platitude,
     };
-    console.log(obj)
-   
-   
+    console.log(obj);
 
     if (
       obj.property &&
@@ -114,30 +169,30 @@ function AddRooms() {
       obj.description &&
       obj.category &&
       obj.amenities &&
-      obj.image
-      
+      obj.image &&
+      obj.location &&
+      obj.longitude &&
+      obj.latitude
     ) {
-        const data=await addRoom(obj,{'vendortoken':localStorage.getItem('vendortoken')})
-        console.log(data)
-        if(data?.status=='success'){
-            toast.success( `Wow! ${data?.message}`, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-                }); 
-                 setTimeout(()=>{
-                     router.push('/vendor/rooms')
-                 },2000)
-             
+      const data = await addRoom(obj, {
+        vendortoken: localStorage.getItem("vendortoken"),
+      });
 
-        }
-    
-
+      if (data?.status == "success") {
+        toast.success(`Wow! ${data?.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          router.push("/vendor/rooms");
+        }, 1000);
+      }
     } else {
       toast.error(`OOPS! All fields are required`, {
         position: "top-center",
@@ -188,6 +243,8 @@ function AddRooms() {
               id="grid-last-name"
               type="number"
               name="roomNo"
+              min="1"
+              max="10"
               placeholder="Enter your Room number"
             />
           </div>
@@ -196,13 +253,14 @@ function AddRooms() {
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               for="grid-first-name"
             >
-             single Room Price
+              single Room Price
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-first-name"
               type="number"
               name="price"
+              min="1"
               placeholder="Enter the amount of room"
             />
           </div>
@@ -218,11 +276,10 @@ function AddRooms() {
               id="grid-first-name"
               type="number"
               name="adultRate"
+              min="1"
               placeholder="Enter the adults price"
             />
-          
           </div>
-
 
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
@@ -236,10 +293,10 @@ function AddRooms() {
               id="grid-first-name"
               type="number"
               name="oneRoom"
+              min="1"
               placeholder="enter the amout of single room"
             />
           </div>
-
 
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
@@ -253,19 +310,11 @@ function AddRooms() {
               id="grid-first-name"
               type="number"
               name="capacity"
+              min="1"
               placeholder=" total count  capacity"
             />
-          
           </div>
-
-
-
         </div>
-
-        
-        
-
-
 
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full  px-3">
@@ -282,7 +331,6 @@ function AddRooms() {
               type="text"
               placeholder="Enter your property address"
             />
-        
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 mb-2">
@@ -377,7 +425,7 @@ function AddRooms() {
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="grid-zip"
               type="number"
-              name='zip'
+              name="zip"
               placeholder="90210"
             />
           </div>
@@ -425,10 +473,10 @@ function AddRooms() {
             "First aid kit",
             "Air-conditionar",
           ]}
-        //   onRemove={}
+          //   onRemove={}
           onSelect={setAmenities}
         />
-           <div className="flex flex-wrap -mx-3 mb-6 mt-8">
+        <div className="flex flex-wrap -mx-3 mb-6 mt-8">
           <div className="w-full  px-3">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -456,7 +504,7 @@ function AddRooms() {
           <select
             className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             id="grid-state"
-            name='category'
+            name="category"
           >
             <option value="deluxe">Deluxe</option>
             <option value="laxuary">Laxuary</option>
@@ -490,7 +538,7 @@ function AddRooms() {
                   <input
                     id="comments"
                     name="parking"
-                    value='parking'
+                    value="parking"
                     type="checkbox"
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
@@ -516,7 +564,7 @@ function AddRooms() {
                 <input
                   id="comments"
                   name="swimmingPool"
-                  value='swimmingPool'
+                  value="swimmingPool"
                   type="checkbox"
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
@@ -533,7 +581,7 @@ function AddRooms() {
           </div>
         </div>
 
-        <div class="flex  items-center px-3 sm:w-[150%] lg:w-[150%]">
+        <div class="flex pb-12 items-center px-3 sm:w-[150%] lg:w-[150%]">
           <div class="rounded-lg shadow-xl bg-gray-50 md:w-1/2 w-[360px]">
             <div class="m-4">
               <span className="flex justify-center items-center text-[12px] mb-1 text-red-500">
@@ -588,10 +636,75 @@ function AddRooms() {
             </div>
           </div>
         </div>
+
+        <div className="flex flex-col pb-10 w-full px-6 lg:flex-row md:flex-col p-2 ">
+          <div className=" lg:max-w-[410px] w-full">
+            <input
+              placeholder="Add your property location"
+              className="p-2 py-3 outline-none focus pr-10  bg-gray-100 border rounded border-gray-100 text-slate-600  lg:max-w-[410px] w-full leading-4"
+              onChange={handleInput}
+              value={place}
+            />
+            <svg
+              className="absolute pointer-events-none top-3 right-5 "
+              width={24}
+              height={24}
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z"
+                stroke="#4B5563"
+                strokeWidth="1.66667"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M21 21L15 15"
+                stroke="#4B5563"
+                strokeWidth="1.66667"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <ClearIcon
+            onClick={() => setPlace("")}
+            className="mt-4 cursor-pointer"
+          />
+          {/* <button onClick={(event)=>{addMark(event)}} className="bg-sky-600  text-white lg:max-w-[164px] font-medium px-3 py-4 w-full  rounded-[4px] leading-[14px] hover:bg-sky-800">
+                   Add location
+                  </button> */}
+
+          {suggestion.length > 0 && (
+            <div className="absolute z-50">
+              <ul className=" bg-white border border-gray-400 w-full max-h-48 overflow-y-scroll mt-14 rounded shadow-md">
+                {suggestion.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handlePickup(suggestion)}
+                    className="text-black cursor-pointer hover:bg-gray-200 p-2 hover:text-black border-b border-gray-400"
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className=" ml-6  -mt-8 lg:md:w-[700px] sm:w-[600px ">
+          <div
+            id="maps"
+            className=" h-80   rounded-lg border border-gray-200 mb-6 shadow-lg"
+          ></div>
+        </div>
+
         <div className="low-root mt-8 ">
           <button
             type="submit"
-            className="bg-sky-600 rounded  hover:bg-sky-800 text-white px-6 float-right p-1  "
+            className="bg-sky-600 rounded  hover:bg-sky-800 text-white px-6 ml-4 p-1  "
           >
             {" "}
             submit{" "}

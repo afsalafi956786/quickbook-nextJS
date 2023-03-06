@@ -156,6 +156,7 @@ export default function Signin() {
                   autoComplete="given-name"
                   name="password"
                   required
+                  type='password'
                   fullWidth
                   id="password"
                   label="Password"

@@ -18,6 +18,7 @@ const userShema=new mongoose.Schema({
         trim:true,
         minlength:[6],
     },
+    
     phone:{
         type:String,
         required:true,

@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }) {
   const[vendorDetails,setVendorDetails]=useState({})
   const [vendorOtp,setVendorOtp]=useState({})
 
+
   return(
 
   

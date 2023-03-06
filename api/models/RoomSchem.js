@@ -70,6 +70,9 @@ const RoomShema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    isRejected:{
+        default:false
+    },
     isBanned:{
         type:Boolean,
         default:false

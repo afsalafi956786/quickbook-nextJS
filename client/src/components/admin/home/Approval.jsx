@@ -1,7 +1,7 @@
 import React from "react";
 import swal from "sweetalert";
 
-import { propertyApprovel } from "@/config/AdminEndpoint";
+import { propertyApprovel,propertyReject} from "@/config/AdminEndpoint";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -89,6 +89,40 @@ function Approval({ room,setRefresh,refresh }) {
 
               <div>
                 <h4 className="text-sky-600">Action</h4>
+                <button
+
+onClick={async () => {
+  swal({
+    title: "Are you sure?",
+    background: "black",
+    text: "Do you want to Reject  this property",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then(async (wilDelete) => {
+    if (wilDelete) {
+      const data = await propertyReject(rooms._id);
+      if(data?.status=='success'){
+          setRefresh(!refresh)
+          toast.success( `Wow! ${data?.message}`, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            }); 
+      }
+     
+    }
+  });
+}}
+                
+                className="text-white mt-4 bg-red-700 hover:bg-green-800 focus:outline-none font-medium rounded-xl text-sm px-6 py-2.5 text-center mr-2   dark:hover:bg-red-800 " >
+                Reject
+                </button>
                 <button
                   onClick={async () => {
                     swal({

@@ -1,23 +1,26 @@
 import React from "react";
 import Image from "next/image";
-// import ApartmentIcon from "@mui/icons-material/Apartment";
+
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 
-function VendorNav({vendor,admin}) {
-    console.log(vendor)
-    console.log(admin);
+function VendorNav({admin}) {
+  const router=useRouter();
+    const vendors=useSelector((state)=>state.vendor.value)
+    console.log(vendors)
     
   return (  
     <>
       <div className=" w-full h-20 shadow-lg  ">
         <div className="flex justify-between items-center w-full h-full px-2 2xl:px-16 ">
           <Image src="/logo/qb.png" alt="/" width="150" height="80" />
-         {vendor ? ( <div className="flex p-2 space-x-2 ">
+         {vendors ? ( <div className="flex p-2 space-x-2  ">
           
-            <img className="rounded-full h-14  " src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnN8ZW58MHx8MHx8&w=1000&q=80" alt="" />        
-            <h3 className="mt-4 font-bold ">
-            {vendor?.email}
+            <img  className="rounded-full h-14 w-16 border cursor-pointer border-gray-300  " src={`${vendors?.image ?vendors.image:'https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG.png'}`} alt="" />        
+            <h3 className="mt-4 font-bold text-sky-600">
+            {vendors?.email}
             </h3>
 
           </div>

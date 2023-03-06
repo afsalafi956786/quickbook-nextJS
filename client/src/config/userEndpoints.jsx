@@ -35,8 +35,66 @@ export async function userDatafetch(header){
     try{
         const {data}= await axios.get(`/user_data`,{headers:header})
         return data;
-    }catch(erorr){
-         return {status:'failed',message:erorr.message}
+    }catch(error){
+        return {status:'failed', message:'Network error'}
     }
 }
 
+export async function  editUserProfile(formData,header){
+    try{
+        const {data}=await axios.patch('/editProfile',formData,{headers:header})
+        return data;
+
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}
+ 
+export async function editPassword(formData,header){
+    try{
+        const {data}=await axios.patch('/editpassword',formData,{headers:header})
+        return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+    
+
+}
+
+export async function getRoomInfo(req,res){
+    try{
+        const {data}=await axios.get('/getRoomdetails')
+        return data;
+
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+
+}
+
+export async function getDisplayDetails(roomId){
+    try{
+         
+        const {data}=await axios.get(`/getDetails/${roomId}`)
+         return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}
+
+export async function getLocation(place){
+    try{
+        const { data }=await axios.get(`/getLocation?place=${place}`)
+        return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}
+// export async function  ContinueBook(formData,header){
+//     try{
+//         const {data}=await axios.post('/continue',formData,{headers:header})
+
+//     }catch(error){
+//         return {status:'failed', message:'Network error'}
+//     }
+// }

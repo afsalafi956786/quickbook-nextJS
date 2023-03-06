@@ -4,7 +4,7 @@ function SideBar() {
   return (
     <>
                
-            <div className=' sm:hidden xs:hidden  xl:lg:md:block  lg:w-[35%] ml-12 border px-4 pb-6 shadow rounded overflow-hidden  shadow-lg'>
+            <div className=' sm:hidden xs:hidden h-[60%] mt-24   xl:lg:md:block  lg:w-[35%] ml-12 border px-4 pb-6 shadow rounded overflow-hidden  shadow-lg'>
     
                 <div className='divide-y divide-gray-200 space-y-5 border-l-0'>
                     <div>

@@ -64,6 +64,17 @@ export async function  propertyApprovel(roomId){
     }
 
 }
+export async function propertyReject(roomId){
+    try{
+        const {data}= await axios.post('/admin/propertyReject',{roomId})
+        return data;
+
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+
+}
+
 
 // export async function propertyClick(header,roomid){
 //     try{

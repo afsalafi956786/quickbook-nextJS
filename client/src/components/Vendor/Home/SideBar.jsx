@@ -37,7 +37,7 @@ function SideBar() {
      }
   return ( 
    <>
-   <div className=' flex flex-col relative pt-[4rem] transition-all-[300ms] ease'>
+   <div className=' flex flex-col relative pt-[4rem] transition-all-[300ms] ease '>
     {/* <div className=''>
       <MenuIcon/>
     </div> */}
@@ -48,7 +48,7 @@ function SideBar() {
     
         
     {/* menu */}
-    <div className='lg:mt-[2rem] mt-[2rem]  lg:h-[66%] lg:md:bg-white flex flex-col lg:gap-[2rem] gap-[2rem] lg:block lg:space-y-8 xs:fixed xs:z-10 xs:h-[100%] ' >
+    <div className='lg:mt-[2rem] mt-[2rem] lg:h-[66%] lg:md:bg-white flex flex-col lg:gap-[2rem] gap-[2rem] lg:block lg:space-y-8 xs:fixed xs:z-10 xs:h-[100%] ' >
   
         <Link href='/vendor' className='flex xs:w-[55%]  lg:md:w-[75%] items-center gap-[1rem] h-[2.5rem] ml-[2rem]  relative px-3 transition-all ease-in-out delay-150 hover:-x-1 hover:scale-110 duration-50  cursor-pointer text-xl active:bg-gray-300 hover:bg-gray-300 ml-0 rounded-lg bg-gray-100'>
             <div className=''>

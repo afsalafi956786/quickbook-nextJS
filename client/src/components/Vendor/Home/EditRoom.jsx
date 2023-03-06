@@ -7,15 +7,77 @@ import { useState,useEffect } from "react";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { storage } from "@/config/firebase/firebase";
 import { EditRoomInfo } from "@/config/venderEndpoints";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { mapboxGeo } from "@/constance/constance";
+import { maptoken } from "@/constance/constance";
+import ClearIcon from "@mui/icons-material/Clear";
 import { useRouter } from "next/router";
 
 function EditRoom({room}) {
+  mapboxgl.accessToken = maptoken;
   const router=useRouter();
   const [files, setFile] = useState([]);
   const [message, setMessage] = useState();
   const [aminites,setAmenities]=useState(null)
   const [image,setImage]=useState([])
   const [urls,setUrls]=useState([])
+
+  const [place, setPlace] = useState(null);
+  const [suggestion, setSuggestion] = useState([]);
+  const [plongitude, setLongitude] = useState("76.2673");
+  const [platitude, setLatitude] = useState("9.9312");
+  const [clear, setClear] = useState("");
+
+  //map useeffect map code
+  useEffect(() => {
+    const map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [plongitude, platitude],
+      zoom: 8,
+    });
+    const coordinates = [plongitude, platitude];
+    addToMap(map, coordinates);
+  }, [plongitude, platitude]);
+  const addToMap = (map, coordinates) => {
+    const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+    console.log(marker);
+  };
+
+  
+  const handleInput = async (event) => {
+    console.log("vannu");
+    setPlace(null);
+    const places = event.target.value;
+    console.log(places);
+    if (!places) {
+      setSuggestion([]);
+      return;
+    }
+    const url = `${mapboxGeo}/${encodeURIComponent(
+      places
+    )}.json?access_token=${maptoken}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    setSuggestion(data.features.map((f) => f.place_name));
+  };
+
+
+  const handlePickup = async (suggestion) => {
+    const pla = suggestion;
+    setPlace(pla);
+    setSuggestion([]);
+    const url = `${mapboxGeo}/${suggestion}.json?limit=1&access_token=${maptoken}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const longitude = data.features[0].geometry.coordinates[0];
+    const latitude = data.features[0].geometry.coordinates[1];
+    setLongitude(longitude);
+    setLatitude(latitude);
+  };
+
+
   const handleFile = (e) => {
     setMessage("");
     const ingList=Array.from(e.target.files)
@@ -73,8 +135,6 @@ function EditRoom({room}) {
 
    }
 
-   
-
     let obj = {
       property: data.get("property"),
       roomNo:data.get('roomNo'),
@@ -92,12 +152,14 @@ function EditRoom({room}) {
       category: data.get("category"),
       parking: data.get("parking"),
       swimminPool: data.get("swimmingPool"),
+      location: place,
+      longitude: plongitude,
+      latitude: platitude,
 
      
     };
-    console.log(obj)
    
-   
+    setUrls([])
 
     if (
       obj.property &&
@@ -114,12 +176,13 @@ function EditRoom({room}) {
       obj.description &&
       obj.category &&
       obj.amenities &&
-      obj.image
+      obj.image &&
+      obj.location
+     
       
     ) {
         const data=await EditRoomInfo(obj,room._id,{'vendortoken':localStorage.getItem('vendortoken')})
         if(data?.status=='success'){
-         
   toast.success( `Wow! ${data?.message}`, {
                 position: "top-center",
                 autoClose: 5000,
@@ -195,6 +258,8 @@ function EditRoom({room}) {
               type="number"
               defaultValue={room?.totalrooms}
               name="roomNo"
+              min='1'
+              max='10'
               placeholder="Enter your Room number"
             />
           </div>
@@ -211,6 +276,7 @@ function EditRoom({room}) {
               type="number"
               defaultValue={room?.price}
               name="price"
+              min='1'
               placeholder="Enter the amount of room"
             />
           </div>
@@ -227,6 +293,7 @@ function EditRoom({room}) {
               type="number"
               defaultValue={room?.AdultsRate}
               name="adultRate"
+              min='1'
               placeholder="Enter the adults price"
             />
           
@@ -246,6 +313,7 @@ function EditRoom({room}) {
               type="number"
               defaultValue={room?.totalRoomRate}
               name="oneRoom"
+              min='1'
               placeholder="enter the amout of single room"
             />
           </div>
@@ -264,6 +332,7 @@ function EditRoom({room}) {
               type="number"
               defaultValue={room?.capacity}
               name="capacity"
+              min='1'
               placeholder=" total count  capacity"
             />
           
@@ -587,6 +656,26 @@ function EditRoom({room}) {
                   />
                 </label>
               </div>
+              {image.length == 0 ?
+              <div className="flex flex-wrap gap-2 mt-2">
+              {room?.img.map((file, key) => {
+                return (
+                  <div key={key} className="overflow-hidden relative">
+                    <i
+                      onClick={() => {
+                        removeImage(file.name);
+                      }}
+                      className="mdi mdi-close absolute right-1 hover:text-white cursor-pointer"
+                    ></i>
+                    <img
+                      className="h-20 w-20 rounded-md"
+                      src={file}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            :
               <div className="flex flex-wrap gap-2 mt-2">
                 {image.map((file, key) => {
                   return (
@@ -605,13 +694,86 @@ function EditRoom({room}) {
                   );
                 })}
               </div>
+              }
             </div>
           </div>
         </div>
+
+        <div className="flex flex-col pb-10 w-full px-6 lg:flex-row md:flex-col p-2 ">
+          <div className=" lg:max-w-[410px] w-full">
+            <input
+              placeholder="Add your property location"
+              className="p-2 py-3 outline-none focus pr-10  bg-gray-100 border rounded border-gray-100 text-slate-600  lg:max-w-[410px] w-full leading-4"
+              onChange={handleInput}
+              value={place}
+              defaultValue={room?.location}
+            />
+            <svg
+              className="absolute pointer-events-none top-3 right-5 "
+              width={24}
+              height={24}
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z"
+                stroke="#4B5563"
+                strokeWidth="1.66667"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M21 21L15 15"
+                stroke="#4B5563"
+                strokeWidth="1.66667"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <ClearIcon
+            onClick={() => setPlace("")}
+            className="mt-4 cursor-pointer"
+          />
+          {/* <button onClick={(event)=>{addMark(event)}} className="bg-sky-600  text-white lg:max-w-[164px] font-medium px-3 py-4 w-full  rounded-[4px] leading-[14px] hover:bg-sky-800">
+                   Add location
+                  </button> */}
+
+          {suggestion.length > 0 && (
+            <div className="absolute z-50">
+              <ul className=" bg-white border border-gray-400 w-full max-h-48 overflow-y-scroll mt-14 rounded shadow-md">
+                {suggestion.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handlePickup(suggestion)}
+                    className="text-black cursor-pointer hover:bg-gray-200 p-2 hover:text-black border-b border-gray-400"
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+            
+
+        <div className=" ml-6  -mt-8 lg:md:w-[700px] sm:w-[600px ">
+          <div
+            id="map"
+            className=" h-80   rounded-lg border border-gray-200 mb-6 shadow-lg"
+          ></div>
+        </div>
+
+
+
+
+
+
         <div className="low-root mt-8 ">
           <button
             type="submit"
-            className="bg-sky-600 rounded  hover:bg-sky-800 text-white px-6 float-right p-1  "
+            className="bg-sky-600 rounded  hover:bg-sky-800 text-white px-6  p-1  "
           >
             {" "}
             submit{" "}

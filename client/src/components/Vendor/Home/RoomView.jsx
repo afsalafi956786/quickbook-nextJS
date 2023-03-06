@@ -5,13 +5,17 @@ import swal from "sweetalert";
 import { DeleteRoom } from '@/config/venderEndpoints';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from 'react';
 
 function RoomView({roomData,setRefresh,refresh}) {
     const router=useRouter();
+    // useEffect(()=>{
+    //   console.log(roomData,"====");
+    // },[roomData])
   return (
     <>
 
-<div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
+<div className="py-14 px-4 md:px-6  2xl:px-20 2xl:container 2xl:mx-auto">
      <ToastContainer />
         <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
           <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
@@ -61,7 +65,7 @@ function RoomView({roomData,setRefresh,refresh}) {
                         <span className="text-gray-700 font-bold">Category : </span> {rooms?.category}
                       </p>
                       <p className="text-sm leading-none text-gray-800">
-                        <span className="text-gray-700 font-bold">Location : </span> {rooms?.vendorId?.propertyLocation}
+                        <span className="text-gray-700 font-bold">Location : </span> {rooms?.location}
                       
                       </p>
                       <p className="text-sm leading-none text-gray-800">

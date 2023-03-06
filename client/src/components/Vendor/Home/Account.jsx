@@ -73,6 +73,7 @@ function Account({setRefresh,refresh}) {
           propertyLocation:data.get('propertyLocation'),
           
         };
+      console.log(data.profileImage)
              let regEmail=/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
             if(obj.name && obj.email  && obj.propertyName && obj.propertyLocation){
                 if(regEmail.test(obj.email)){
