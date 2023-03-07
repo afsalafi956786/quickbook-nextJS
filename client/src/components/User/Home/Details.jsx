@@ -19,6 +19,8 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faPerson } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment/moment";
+import { useEffect } from "react";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -26,11 +28,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Details({ rooms}) {
+function Details({ rooms }) {
   const router = useRouter();
- 
-  const [roomRate,setRoomRate]=useState()
+
   const [openDate, setOpenDate] = useState(false);
+  const [dayCount, setCount] = useState(null);
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -39,13 +41,25 @@ function Details({ rooms}) {
     },
   ]);
 
-
-
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
     adult: 1,
     room: 1,
   });
+
+  useEffect(() => {
+    if (date != null) {
+      const startDate = moment(date[0].startDate).format("DD-MM-YYYY");
+      const endDate = moment(date[0].endDate).format("DD-MM-YYYY");
+      const newstartdate = Date(startDate);
+      console.log(newstartdate, "date");
+      const newenddate = Date(endDate);
+      const day = Math.floor(
+        (date[0].endDate - date[0].startDate) / (1000 * 60 * 60 * 24)
+      );
+      setCount(day);
+    }
+  }, [date]);
 
   const handleOption = (name, operation) => {
     setOptions((prev) => {
@@ -63,27 +77,36 @@ function Details({ rooms}) {
 
   let handleSubmit = async (event) => {
     event.preventDefault();
-    const total = options.room * rooms.price
-    const room=options?.room;
-    const adult=options?.adult;
-    const userToken = localStorage.getItem("usertoken")
-    let obj={
-        roomId:rooms._id,
-        Date:date,
-        token:userToken,
-        Room:room,
-        Adult:adult,
-        total:total,
-    }
-    // console.log(obj)
-    if(obj.Date && obj.Room && obj.Adult && obj.total){
-      router.push({
-        pathname:'/checkout',query:{obj:JSON.stringify(obj)}
-      })
+    let day_count = dayCount == 0 ? 1 : dayCount
+    const total = options?.room * day_count * rooms?.price;
+    const room = options?.room;
+    const adult = options?.adult;
+    const userToken = localStorage.getItem("usertoken");
+    const price=rooms?.price * options?.room
+    const dayPrice=rooms?.price * day_count
 
-    
-    }else{
-        
+    let obj = {
+      roomId: rooms._id,
+      Date: date,
+      token: userToken,
+      Room: room,
+      Adult: adult,
+      total: total,
+      location: rooms.location,
+      price: price,
+      dayprice:dayPrice,
+      type: rooms.propertyType,
+      daycount: dayCount,
+      img2:rooms.img[1]
+    };
+   
+
+    if (obj.Date && obj.Room && obj.Adult && obj.total) {
+      router.push({
+        pathname: "/checkout",
+        query: { obj: JSON.stringify(obj) },
+      });
+    } else {
     }
   };
   return (
@@ -162,160 +185,174 @@ function Details({ rooms}) {
           </div>
 
           <div className="flex flex-col max-w-md p-6 space-y-4 divide-y mt-8 sm:w-96 sm:p-10 border border-gray-300 shadow-lg dark:text-gray-700">
-            
-              <h2 className="text-2xl font-semibold -mt-6">Booking Details</h2>
-              <ul className="flex flex-col pt-4 space-y-2">
-                <li className="flex items-start ">
-                  <label className="text-yellow-600">
-                    Date
-                    <div className="flex items-center gap-5">
-                      <FontAwesomeIcon
-                        icon={faCalendarDays}
-                        className="text-gray-500"
-                      />
-
-                      <span
-                        onClick={() => setOpenDate(!openDate)}
-                        className="text-gray-700 cursor-pointer border p-4"
-                      >{`${format(
-                        date[0]?.startDate,
-                        "dd/MM/yyyy"
-                      )}  to   ${format(
-                        date[0]?.endDate,
-                        "dd/MM/yyyy"
-                      )}`}</span>
-                      {openDate && (
-                        <DateRange
-                          editableDateInputs={true}
-                          onChange={(item) => setDate([item.selection])}
-                          moveRangeOnFirstSelection={false}
-                          ranges={date}
-                          
-                          className="absolute mt-96 z-[2] "
-                          minDate={new Date()}
-                        />
-                      )}
-                    </div>
-                  </label>
-                </li>
-                <li className="flex items-start ">
-                  <div className="flex items-center gap-[10px] mt-4">
+            <h2 className="text-2xl font-semibold -mt-6">Booking Details</h2>
+            <ul className="flex flex-col pt-4 space-y-2">
+              <li className="flex items-start ">
+                <label className="text-yellow-600">
+                  Date
+                  <div className="flex items-center gap-5">
                     <FontAwesomeIcon
-                      icon={faPerson}
+                      icon={faCalendarDays}
                       className="text-gray-500"
                     />
+
                     <span
-                      onClick={() => setOpenOptions(!openOptions)}
-                      className="text-gray-600 cursor-pointer border p-3 ml-4 "
-                    >{`${options.adult} adult · ${options.room} room`}</span>
-                    {openOptions && (
-                      <div className="z-[2] ml-8 p-2 mt-36 absolute bg-white text-gray-600 rounded shadow-lg">
-                        <div className="w-[200px]  flex justify-between mt-[10px]">
-                          <span className="text-gray-900">Adult</span>
-                          <div className="flex items-center gap-[10px] font-md text-black">
-                            <button
-                              disabled={options.adult <= 1}
-                              className="w-[30px] h-[30px] border border-bold border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none "
-                              onClick={() => handleOption("adult", "d")}
-                            >
-                              -
-                            </button>
-                            <span className="optionCounterNumber">
-                              {options.adult}
-                            </span>
-                            <button
-                              className="w-[30px] h-[30px] border border-solid border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none"
-                              onClick={() => handleOption("adult", "i")}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                        <div className="w-[200px] flex justify-between mt-[10px]">
-                          <span className="text-gray-600">Room</span>
-                          <div className="flex items-center gap-[10px] font-medium text-black">
-                            <button
-                              disabled={options.room <= 1}
-                              className="w-[30px] h-[30px] border border-solid border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none"
-                              onClick={() => handleOption("room", "d")}
-                            >
-                              -
-                            </button>
-                            <span className="optionCounterNumber">
-                              {options.room}
-                            </span>
-                            <button
-                              className="w-[30px] h-[30px] border border-solid border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none"
-                              onClick={() => handleOption("room", "i")}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      onClick={() => setOpenDate(!openDate)}
+                      className="text-gray-700 cursor-pointer border p-4"
+                    >{`${format(
+                      date[0]?.startDate,
+                      "dd/MM/yyyy"
+                    )}  to   ${format(date[0]?.endDate, "dd/MM/yyyy")}`}</span>
+                    {openDate && (
+                      <DateRange
+                        editableDateInputs={true}
+                        onChange={(item) => setDate([item.selection])}
+                        moveRangeOnFirstSelection={false}
+                        ranges={date}
+                        className="absolute mt-96 z-[2] "
+                        minDate={new Date()}
+                      />
                     )}
                   </div>
-                </li>
-
-                <li className="flex items-start justify-between">
-                  <p className="mt-3">
-                    Room Type
-                    <span className="text-sm dark:text-violet-400"></span>
-                  </p>
-                  <div className="text-right ">
-                    <div className=" bg-green-600 rounded-md px-10 border text-white text-bold p-1 ml-9 mt-3 shadow-lg">
-                      Classic
+                </label>
+              </li>
+              <li className="flex items-start ">
+                <div className="flex items-center gap-[10px] mt-4">
+                  <FontAwesomeIcon icon={faPerson} className="text-gray-500" />
+                  <span
+                    onClick={() => setOpenOptions(!openOptions)}
+                    className="text-gray-600 cursor-pointer border p-3 ml-4 "
+                  >{`${options.adult} adult · ${options.room} room`}</span>
+                  {openOptions && (
+                    <div className="z-[2] ml-8 p-2 mt-36 absolute bg-white text-gray-600 rounded shadow-lg">
+                      <div className="w-[200px]  flex justify-between mt-[10px]">
+                        <span className="text-gray-900">Adult</span>
+                        <div className="flex items-center gap-[10px] font-md text-black">
+                          <button
+                            disabled={options.adult <= 1}
+                            className="w-[30px] h-[30px] border border-bold border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none "
+                            onClick={() => handleOption("adult", "d")}
+                          >
+                            -
+                          </button>
+                          <span className="optionCounterNumber">
+                            {options.adult}
+                          </span>
+                          <button
+                            className="w-[30px] h-[30px] border border-solid border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none"
+                            onClick={() => handleOption("adult", "i")}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <div className="w-[200px] flex justify-between mt-[10px]">
+                        <span className="text-gray-600">Room</span>
+                        <div className="flex items-center gap-[10px] font-medium text-black">
+                          <button
+                            disabled={options.room <= 1}
+                            className="w-[30px] h-[30px] border border-solid border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none"
+                            onClick={() => handleOption("room", "d")}
+                          >
+                            -
+                          </button>
+                          <span className="optionCounterNumber">
+                            {options.room}
+                          </span>
+                          <button
+                            className="w-[30px] h-[30px] border border-solid border-sky-600 text-sky-600 cursor-pointer bg-white  disabled:cursor-none"
+                            onClick={() => handleOption("room", "i")}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </li>
+                  )}
+                </div>
+              </li>
 
-                <li className="flex items-start justify-between">
-                  <p className="mt-6">
-                    days
-                    <span className="text-sm dark:text-violet-400"></span>
-                  </p>
-                  <div className="text-right mt-6">
+              <li className="flex items-start justify-between">
+                <p className="mt-3">
+                  Room Type
+                  <span className="text-sm dark:text-violet-400"></span>
+                </p>
+                <div className="text-right ">
+                  <div className=" bg-green-600 rounded-md px-10 border text-white text-bold p-1 ml-9 mt-3 shadow-lg">
+                    {rooms?.propertyType}
+                  </div>
+                </div>
+              </li>
+
+              <li className="flex items-start justify-between">
+                <p className="mt-6">
+                  days
+                  <span className="text-sm dark:text-violet-400"></span>
+                </p>
+                <div className="text-right mt-6">
+                  {dayCount ? (
+                    <span className="block">{dayCount}</span>
+                  ) : (
                     <span className="block">1</span>
-                  </div>
-                </li>
-              </ul>
-              <div className="pt-4 space-y-2">
-                <div className="p-2">
-                  <div className="flex justify-between">
-                    <input
-                      type="text"
-                      className="border p-2 border-gray-400 shadow-md "
-                      placeholder="enter your coupon code"
-                    />
-                    <button className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none">
-                      Apply
-                    </button>
-                  </div>
-                  <div className="flex items-center space-x-2 text-xs"></div>
+                  )}
                 </div>
+              </li>
+            </ul>
+            <div className="pt-4 space-y-2">
+              <div className="p-2">
                 <div className="flex justify-between">
-                  <span>Discount</span>
-                  <span>100₹</span>
-                </div>
-              </div>
-              <div className="pt-4 space-y-2">
-                <div className="flex justify-between">
-                  <span>Room rate</span>
-                  <span>{rooms?.price}₹</span>
-                </div>
-                <div className="space-y-6">
-                  <div className="flex justify-between">
-                    <span>Total</span>
-                    <span className="font-semibold">{rooms?.price * options?.room}₹</span>
-                  </div>
-                  <button 
-                    onClick={handleSubmit}
-                    className="w-full py-2 font-semibold border rounded bg-sky-600 text-white hover:bg-sky-800 "
-                  >
-                    continue booking
+                  <input
+                    type="text"
+                    className="border p-2 border-gray-400 shadow-md "
+                    placeholder="enter your coupon code"
+                  />
+                  <button className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none">
+                    Apply
                   </button>
                 </div>
+                <div className="flex items-center space-x-2 text-xs"></div>
               </div>
+              <div className="flex justify-between">
+                <span>Discount</span>
+                <span>100₹</span>
+              </div>
+            </div>
+            <div className="pt-4 space-y-2">
+              <div className="flex justify-between">
+                <span>Day price</span>
+                {dayCount ? (
+                  <span>{rooms?.price * dayCount}₹</span>
+                ) : (
+                  <span>{rooms?.price}₹</span>
+                )}
+              </div>
+              <div className="flex justify-between  p-1">
+                <span>Room price</span>
+                <span className="font-semibold">
+                  {rooms?.price * options?.room}₹
+                </span>
+              </div>
+              <div className="space-y-6 pt-4">
+                <div className="flex justify-between">
+                  <span>Total price</span>
+                  {dayCount ? (
+                    <span className="font-semibold text-orange-900 text-xl">
+                      {options?.room * dayCount * rooms?.price}₹
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-orange-900 text-xl">
+                      {options?.room * rooms?.price}₹
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleSubmit}
+                  className="w-full py-2 font-semibold border rounded bg-sky-600 text-white hover:bg-sky-800 "
+                >
+                  continue booking
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

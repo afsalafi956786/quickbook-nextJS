@@ -90,11 +90,11 @@ export async function getLocation(place){
         return {status:'failed', message:'Network error'}
     }
 }
-// export async function  ContinueBook(formData,header){
-//     try{
-//         const {data}=await axios.post('/continue',formData,{headers:header})
-
-//     }catch(error){
-//         return {status:'failed', message:'Network error'}
-//     }
-// }
+export async function doBooking(bookingData,header){
+    try{
+    const {data}=await axios.post('/createbooking',bookingData,{headers:header})
+    return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}
