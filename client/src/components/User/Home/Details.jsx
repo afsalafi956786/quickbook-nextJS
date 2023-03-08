@@ -14,6 +14,8 @@ import MedicalServicesOutlinedIcon from "@mui/icons-material/MedicalServicesOutl
 import CleaningServicesOutlinedIcon from "@mui/icons-material/CleaningServicesOutlined";
 import HeatPumpOutlinedIcon from "@mui/icons-material/HeatPumpOutlined";
 import { DateRange } from "react-date-range";
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -29,6 +31,8 @@ function classNames(...classes) {
 }
 
 function Details({ rooms }) {
+  console.log(rooms,'[[[[[')
+
   const router = useRouter();
 
   const [openDate, setOpenDate] = useState(false);
@@ -97,9 +101,11 @@ function Details({ rooms }) {
       dayprice:dayPrice,
       type: rooms.propertyType,
       daycount: dayCount,
-      img2:rooms.img[1]
+      img1:rooms.img[0],
+      img2:rooms.img[1],
+      vendorId:rooms.vendorId._id
     };
-   
+  
 
     if (obj.Date && obj.Room && obj.Adult && obj.total) {
       router.push({
@@ -107,6 +113,16 @@ function Details({ rooms }) {
         query: { obj: JSON.stringify(obj) },
       });
     } else {
+      toast.error(`OOPS! something error`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
   return (
@@ -114,6 +130,7 @@ function Details({ rooms }) {
       {/* Image gallery */}
       <div className="mx-auto mt-20 max-w-2xl cursor-pointer lg:mt-42 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
         <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
+        <ToastContainer />
           <img
             src={rooms?.img[0]}
             alt=""

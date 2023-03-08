@@ -6,7 +6,7 @@ import {ToastContainer,toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import CloseIcon from '@mui/icons-material/Close';
 import { editPassword } from '@/config/userEndpoints';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 function Password({setRefresh,refresh}) {
     const [open, setOpen] = useState(false);
@@ -152,7 +152,7 @@ function Password({setRefresh,refresh}) {
                               
                             </div>
                             <div className="mb-4">
-                            <VisibilityIcon className='ml-auto' />
+                          
                               <label className="block text-black text-sm font-bold mb-2">
                                 New password
                               </label>

@@ -9,17 +9,25 @@ import swal from "sweetalert";
 import { doBooking } from '@/config/userEndpoints';
 import { useRouter } from 'next/router';
 
+
+
+
 const  PaypalButton=({total,bookingData}) =>{
     const totalPrice=total *0.014
 
     const router=useRouter();
-    // console.log(totalPrice)
-    // console.log(bookingData)
-
+  
+// const [booking,setBookingData]=useState({})
 const handleApprove=async(orderID)=>{
     try{
         const data=await doBooking(bookingData,{'usertoken':localStorage.getItem('usertoken')})
+        console.log(data)
      if(data?.status =='success'){
+          router.push({
+            pathname:'/success',
+            query:{obj:JSON.stringify(data.booked)},
+          });
+          
         Swal.fire({
             position: 'center',
             icon: 'success',
@@ -27,10 +35,10 @@ const handleApprove=async(orderID)=>{
             showConfirmButton: false,
             timer: 1600
           })
-
-        //   router.push('/success')
+          
+        
      }else{
-        toast.error(`OOPS! something error`, {
+        toast.error(`OOPS! something errorrrrr`, {
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
@@ -43,18 +51,19 @@ const handleApprove=async(orderID)=>{
 
      }
 
-
     }catch(error){
-        toast.error(`OOPS! something error`, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+        console.log(error.message)
+
+        // toast.error(`OOPS! something error`, {
+        //     position: "top-center",
+        //     autoClose: 5000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "dark",
+        //   });
     }
 
 }
@@ -103,8 +112,6 @@ const handleApprove=async(orderID)=>{
 
     onApprove={async (data,actions)=>{
         const order=await actions.order.capture();
-        console.log('order',order)
-        
         handleApprove(data.orderID)
     }}
     onError={(err)=>{

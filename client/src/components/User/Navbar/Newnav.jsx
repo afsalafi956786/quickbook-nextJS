@@ -84,7 +84,7 @@ function Newnav() {
               type="text"
               value={place}
               placeholder="Where are you going?"
-              className="headerSearchInput text-black"
+              className="headerSearchInput text-black outline-none"
               onChange={handleInput}
 
               // onChange={handleInput}
@@ -92,7 +92,7 @@ function Newnav() {
 
             {suggestion.length > 0 && (
               <div className="absolute z-50">
-                <ul className=" bg-white border border-gray-400  max-h-48 overflow-y-scroll mt-60 rounded shadow-md">
+                <ul className=" bg-white border border-gray-400  max-h-48 overflow-y-scroll mt-64 rounded shadow-md">
                   {suggestion.map((suggestion, index) => (
                     <li
                       key={index}

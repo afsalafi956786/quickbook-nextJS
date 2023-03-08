@@ -1,16 +1,16 @@
 import React from "react";
 import swal from "sweetalert";
 
-import { propertyApprovel,propertyReject} from "@/config/AdminEndpoint";
+import { propertyApprovel, propertyReject } from "@/config/AdminEndpoint";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Approval({ room,setRefresh,refresh }) {
-  const router = useRouter()
+function Approval({ room, setRefresh, refresh }) {
+  const router = useRouter();
   return (
     <div>
-       <ToastContainer />
+      <ToastContainer />
       {/* <h2 className="ml-6 mt-6">Approval</h2> */}
       <div className="flex pl-4 mt-8">
         <div className="text-balck ">
@@ -56,12 +56,12 @@ function Approval({ room,setRefresh,refresh }) {
 
       {room.map((rooms, i) => (
         <div className="ml-4 mr-4 mt-4">
-          
           <div className="w-full p-4 text-center hover:border-sky-600  border rounded-lg shadow-lg sm:p-8 bg-white border-gray-300">
             <div className="flex justify-between space-y-4 sm:flex sm:space-y-0 sm:space-x-4 text-white">
-              <img  onClick={async ()=>{
-            router.push(`room/${rooms._id}`)
-          }}
+              <img
+                onClick={async () => {
+                  router.push(`room/${rooms._id}`);
+                }}
                 className="xl:lg:h-[10%] border cursor-pointer border-gray-300 xl:lg:w-[10%] xs:h-[30%] xs:w-[20%] xs:-ml-2  "
                 src={rooms.img[0]}
               />
@@ -82,46 +82,44 @@ function Approval({ room,setRefresh,refresh }) {
 
               <div>
                 <h4 className="text-sky-600">Status</h4>
-                  <p className="text-red-700 mt-4 font-extrabold break-all">
-                    Pending
-                  </p>  
+                <p className="text-red-700 mt-4 font-extrabold break-all">
+                  Pending
+                </p>
               </div>
 
               <div>
                 <h4 className="text-sky-600">Action</h4>
                 <button
-
-onClick={async () => {
-  swal({
-    title: "Are you sure?",
-    background: "black",
-    text: "Do you want to Reject  this property",
-    icon: "warning",
-    buttons: true,
-    dangerMode: true,
-  }).then(async (wilDelete) => {
-    if (wilDelete) {
-      const data = await propertyReject(rooms._id);
-      if(data?.status=='success'){
-          setRefresh(!refresh)
-          toast.success( `Wow! ${data?.message}`, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            }); 
-      }
-     
-    }
-  });
-}}
-                
-                className="text-white mt-4 bg-red-700 hover:bg-green-800 focus:outline-none font-medium rounded-xl text-sm px-6 py-2.5 text-center mr-2   dark:hover:bg-red-800 " >
-                Reject
+                  onClick={async () => {
+                    swal({
+                      title: "Are you sure?",
+                      background: "black",
+                      text: "Do you want to Reject  this property",
+                      icon: "warning",
+                      buttons: true,
+                      dangerMode: true,
+                    }).then(async (wilDelete) => {
+                      if (wilDelete) {
+                        const data = await propertyReject(rooms._id);
+                        if (data?.status == "success") {
+                          setRefresh(!refresh);
+                          toast.success(`Wow! ${data?.message}`, {
+                            position: "top-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                          });
+                        }
+                      }
+                    });
+                  }}
+                  className="text-white mt-4 bg-red-700 hover:bg-green-800 focus:outline-none font-medium rounded-xl text-sm px-6 py-2.5 text-center mr-2   dark:hover:bg-red-800 "
+                >
+                  Reject
                 </button>
                 <button
                   onClick={async () => {
@@ -135,20 +133,19 @@ onClick={async () => {
                     }).then(async (wilDelete) => {
                       if (wilDelete) {
                         const data = await propertyApprovel(rooms._id);
-                        if(data?.status=='success'){
-                            setRefresh(!refresh)
-                            toast.success( `Wow! ${data?.message}`, {
-                              position: "top-center",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "light",
-                              }); 
+                        if (data?.status == "success") {
+                          setRefresh(!refresh);
+                          toast.success(`Wow! ${data?.message}`, {
+                            position: "top-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                          });
                         }
-                       
                       }
                     });
                   }}

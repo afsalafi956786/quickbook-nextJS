@@ -4,6 +4,7 @@ import bcrypt, { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { resolve } from "path";
 import RoomModel from "../models/RoomSchem.js";
+import bookingModel from "../models/bookingSchema.js";
 
 export async function userCheck(req, res) {
   try {
@@ -232,10 +233,77 @@ export async function getlocalLocation(req, res) {
   }
 }
 
-// export async function getContinueBook(req,res){
-//   try{
+export async function createBooking(req,res){
+  try{
+    const userId=req.userId
+    let obj=req.body
+    console.log(obj.vendorId,'id obj vanu')
+    let booked=await bookingModel.create({
+      roomId:obj.roomId,
+      userId:userId,
+      vendorId:obj.vendorId,
+      address:obj.address,
+      phone:obj.phone,
+      place:obj.place,
+      adult:obj.adult,
+      checkIn:obj.check_in,
+      checkOut:obj.check_out,
+      rooms:obj.roomCount,
+      location:obj.location,
+      RoomPrice:obj.price,
+      type:obj.type,
+      total:obj.total,
+      days:obj.dayCount,
+      // img1:obj.img1,
+      // img2:obj.img2,
+                   
+    })
 
-//   }catch(error){
-//     res.json({ status: "failed", message: error.message });
-//   }
-// }
+   
+    //     let rooms=await RoomModel.findById(obj.roomId)
+    //     rooms.totalrooms=rooms.totalrooms-obj.rooms
+    //     rooms.save()
+
+    res.json({status:'success', booked})
+
+  }catch(error){
+    console.log('ujhhj7',error.message);
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+
+export async function successData(req, res) {
+  try {
+      const roomId=req.params.roomId;
+        const userId=req.userId
+        const roomInfo=await RoomModel.findById(roomId).populate('vendorId')
+        console.log(roomInfo,';;;;;')
+        res.json(roomInfo)
+  } catch (error) {
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+
+export async function bookingData(req, res) {
+  try {
+               
+    const userId=req.userId;
+    const bookedRooms=await bookingModel.find({userId:userId}).sort({createdAt:-1}).populate('roomId').populate('vendorId')
+    res.json({bookedRooms})
+  } catch (error) {
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function canceleBook(req,res){
+  try{
+    let {bookId}=req.body
+    console.log(bookId);
+    let cancel=await bookingModel.findByIdAndUpdate(bookId,{ isCancel:true})
+    res.json({status:'success','message':'Your room has been cancelled !!',cancel})
+  }catch(error){
+    res.json({ status: "failed", message: error.message });
+  }
+}

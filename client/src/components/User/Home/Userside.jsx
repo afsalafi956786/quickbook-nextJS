@@ -41,14 +41,14 @@ function UserSide() {
               </li>
 
               <li>
-                <a
+                <Link href="/bookings"
                   className="flex items-center px-4 py-2 mt-5 text-gray-600 rounded-md hover:bg-gray-200"
-                  href="#"
+                 
                 >
                   <BookIcon />
 
                   <span className="mx-4 font-medium">Booking history</span>
-                </a>
+                </Link>
               </li>
               <li>
                 <a

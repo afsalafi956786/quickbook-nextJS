@@ -25,11 +25,11 @@ function RoomView({roomData,setRefresh,refresh}) {
                   <div className="flex flex-col justify-start items-start bg-gray-50 px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                         <h4 className=" md:text- lg leading-6 xl:leading-5 text-gray-800">
                Approval :
-               { rooms.isApproved ?(
+               { rooms.isApproved ?
                 <span className='text-green-700'>confirmed</span> 
-               ):(
+               : rooms.isRejected ? <span className='text-red-700'>Rejected</span>:
                 <span className='text-yellow-500'>waiting for admin approval</span> 
-               )
+               
                }
                
               </h4>

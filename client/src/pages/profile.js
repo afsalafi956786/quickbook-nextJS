@@ -10,6 +10,7 @@ import { userDatafetch } from '@/config/userEndpoints';
 import { useRouter } from 'next/router'
 import {users} from '@/store/users'
 import { useDispatch } from 'react-redux'
+import Newnav from '@/components/User/Navbar/Newnav'
 
 
 function profile() {
@@ -65,9 +66,16 @@ function profile() {
     
   return (
     <>
-    <HomeNav/>
-
-     <div className='grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1  sm:content-center xs:content-center' >
+    <div className=''>
+      <HomeNav/>
+    </div>
+    <div className='py-6'>
+      <Newnav />
+    </div>
+    
+         
+     <div className='grid lg:grid-cols-4 -mt-12  md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1  sm:content-center xs:content-center ' >
+     
         <UserSide/>
 
         <Profile setRefresh={setRefresh} refresh={refresh} />

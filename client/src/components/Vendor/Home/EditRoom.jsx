@@ -47,7 +47,7 @@ function EditRoom({room}) {
 
   
   const handleInput = async (event) => {
-    console.log("vannu");
+
     setPlace(null);
     const places = event.target.value;
     console.log(places);
@@ -182,6 +182,7 @@ function EditRoom({room}) {
       
     ) {
         const data=await EditRoomInfo(obj,room._id,{'vendortoken':localStorage.getItem('vendortoken')})
+        console.log(EditRoomInfo)
         if(data?.status=='success'){
   toast.success( `Wow! ${data?.message}`, {
                 position: "top-center",
@@ -195,7 +196,7 @@ function EditRoom({room}) {
                 }); 
           setTimeout(()=>{
             router.push('/vendor/rooms')
-          },2000)
+          },1000)
                 
 
         }
@@ -658,7 +659,7 @@ function EditRoom({room}) {
               </div>
               {image.length == 0 ?
               <div className="flex flex-wrap gap-2 mt-2">
-              {room?.img.map((file, key) => {
+              {room?.img?.map((file, key) => {
                 return (
                   <div key={key} className="overflow-hidden relative">
                     <i

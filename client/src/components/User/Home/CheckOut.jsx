@@ -7,13 +7,12 @@ import { useState } from "react";
 
 function CheckOut({ details }) {
 
+  
 const [change,setChange]=useState(false);
 const [booking,setBooking]=useState({})
 
   const startDate = moment(details?.Date[0].startDate).format("DD-MM-YYYY");
   const endDate = moment(details?.Date[0].endDate).format("DD-MM-YYYY");
-
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,8 +32,10 @@ const [booking,setBooking]=useState({})
       dayCount: details.daycount,
       type: details.type,
       total: details.total,
-      roomId:details.roomId
+      roomId:details.roomId,
+      vendorId:details.vendorId,
     };
+    // console.log(obj.vendorId,'[[[')
 
     if (
       obj.address &&
@@ -203,7 +204,7 @@ const [booking,setBooking]=useState({})
               <div>
               <p className="mt-8 text-semibold text-orange-700">choose your  payment method  </p>
                  <div className="paypalbutton pt-12">
-                  <PaypalButton  total={details.total} bookingData={booking} />
+                  <PaypalButton  total={details?.total} bookingData={booking} />
 
                  </div>
                  </div>
@@ -224,7 +225,7 @@ const [booking,setBooking]=useState({})
               <ul className="flex flex-col pt-4 space-y-2">
                 <div className="h-[20%] w-[40%] ml-6 shadow-lg flex space-x-4">
                   <img className="rounded " src={details?.img1} />
-                  <img className="rounded" src={details?.img2} />
+                  <img className="rounded " src={details?.img2} />
                 </div>
                 <li className="flex items-start justify-between">
                   <div className="border p-2 ml-6 mt-4">

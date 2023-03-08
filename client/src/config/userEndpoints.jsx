@@ -98,3 +98,30 @@ export async function doBooking(bookingData,header){
         return {status:'failed', message:'Network error'}
     }
 }
+
+export async function SuccessDetails(roomId,header){
+    try{
+    const {data}=await axios.get(`/successData/${roomId}`,{headers:header})
+    return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}
+
+export async function  getBookings (header){
+    try{
+    const {data}=await axios.get('/bookingData',{headers:header})
+    return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}
+
+export async function cancelBooking (bookId){
+    try{
+    const {data}=await axios.post('/cancelbooking',{bookId})
+    return data;
+    }catch(error){
+        return {status:'failed', message:'Network error'}
+    }
+}

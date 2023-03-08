@@ -244,7 +244,12 @@ export async function editRoomData(req, res) {
     const obj = req.body;
     console.log(obj, "aaaa");
     const roomId = req.params.roomId;
-    let editRoom = await RoomModel.findByIdAndUpdate(roomId, {
+    if (obj.image != "") {
+      await RoomModel.findByIdAndUpdate(roomId, {
+        img: obj.image,
+      });
+    }
+    await RoomModel.findByIdAndUpdate(roomId, {
       propertyType: obj.property,
       totalrooms: obj.roomNo,
       capacity: obj.capacity,
@@ -257,7 +262,6 @@ export async function editRoomData(req, res) {
       zip: obj.zip,
       description: obj.description,
       amenities: obj.amenities,
-      img: obj.image,
       category: obj.category,
       parking: obj.parking,
       swimmingPool: obj.swimmingPool,

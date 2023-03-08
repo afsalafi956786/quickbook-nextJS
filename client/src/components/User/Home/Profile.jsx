@@ -95,9 +95,11 @@ function Profile({setRefresh,refresh}) {
   return (
    <>
 
-      <div className='lg:md:mt-[60%] xs:mt-12 sm:mt-[60%] xs:ml-16'>
+      <div className='lg:md:mt-[60%] xs:mt-12 sm:mt-[60%] xs:ml-16 '>
+    
             <div>
             <ToastContainer />
+            
                 <div className="max-w-xs h-auto flex flex-col items-center shadow-lg rounded-lg border border-gray-300 mb-6 py-5 px-4">
                     <div>
                         <h4 className="text-gray-400  font-bold  ">Full Name </h4>

@@ -112,6 +112,7 @@ export default function Home() {
           
     </section>
     <h1 className='mt-6 px-24 text-gray-600 '>Top category</h1>
+    
   <Room/>
   <Footer/>
    
