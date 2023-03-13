@@ -5,16 +5,17 @@ import Newnav from '@/components/User/Navbar/Newnav'
 import Map from '@/components/User/Home/Map'
 import { users } from "@/store/users";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react"
 import React from 'react'
-import {userDatafetch,getDisplayDetails } from "@/config/userEndpoints";
+import {userDatafetch,getDisplayDetails,getReviews } from "@/config/userEndpoints";
 
 
 function details({rooms}) {
   let dispatch = useDispatch();
   let router = useRouter();
-
+  const room=useSelector((state)=>state.rooms.value);
+  const [reviews,setReviews]=useState({})
 
   useEffect(() => {
     // function created for do await
@@ -55,6 +56,19 @@ function details({rooms}) {
     invoke();
   }, []);
 
+
+  useEffect(()=>{
+    async function run(){
+    const review= await getReviews(rooms?._id,{'usertoken':localStorage.getItem('usertoken')})
+    setReviews(review)
+
+    
+     
+    }
+    run();
+
+  },[])
+
   
 
   
@@ -68,7 +82,7 @@ function details({rooms}) {
     <Newnav/> 
    </div>
 
-    <Details rooms={rooms}/>
+    <Details rooms={rooms} userReview={reviews} />
    <Map rooms={rooms}/>
     <Footer/>
 

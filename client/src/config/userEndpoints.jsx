@@ -30,7 +30,7 @@ export async function userSignin(formData){
     }catch(error){
         return {status:'failed', message:'Network error'}
     }
-}
+}             
 export async function userDatafetch(header){
     try{
         const {data}= await axios.get(`/user_data`,{headers:header})
@@ -125,3 +125,27 @@ export async function cancelBooking (bookId){
         return {status:'failed', message:'Network error'}
     }
 }
+
+export async function PostReview(obj,header){
+    try{
+        const {data}=await axios.post('/review',obj,{headers:header})
+        return data;
+
+    }catch(error){
+       
+         return {status:'failed', message:'Network error'}
+    }
+}
+
+
+export async function getReviews (roomId,header){
+    try{
+        const {data}=await axios.get(`/getReiviews/${roomId}`,{headers:header})
+        return data;
+
+    }catch(error){
+       
+         return {status:'failed', message:'Network error'}
+    }
+}
+

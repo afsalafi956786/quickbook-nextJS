@@ -1,10 +1,11 @@
 import vendorModel from "../models/vendorShema.js";
 import bcrypt, { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
-// import userModel from "../models/userShema.js";
 import RoomModel from "../models/RoomSchem.js";
-import { futimesSync } from "fs";
-// import adminModel from "../models/adminShema.js";
+import couponModel from "../models/couponShema.js";
+import bookingModel from "../models/bookingSchema.js";
+
+
 
 export async function vendorCheck(req, res) {
   try {
@@ -296,7 +297,6 @@ export async function editProfile(req, res) {
       propertyName: obj.propertyName,
       propertyLocation: obj.propertyLocation,
     });
-    console.log(editVendor);
     res.json({
       status: "success",
       message: "updated successfully",
@@ -304,6 +304,63 @@ export async function editProfile(req, res) {
     });
   } catch (error) {
     console.log(error.message);
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function createCoupon(req,res){
+  try{
+
+let obj=req.body;
+let vendorId=req.vendorId
+
+
+// const coupon=await couponModel.findOne({couponCode:obj.couponCode})
+// if(!coupen){
+// }
+
+
+ let coupons=await couponModel.create({
+  vendorId:vendorId,
+  couponCode:obj.code,
+  discount:obj.discount,
+  startDate:obj.startDate,
+  endDate:obj.endDate,
+})
+console.log(coupons)
+res.json({status:'success',message:'your coupon is added',coupons})
+  }catch(error){
+    console.log(error.message)
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function viewCoupons(req,res){
+  try{
+     let couponShow=await couponModel.find({vendorId:req.vendorId})
+    res.json(couponShow)
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function deleteCoupon(req,res){
+  try{
+   let couponId=req.params.couponId
+     await couponModel.findByIdAndDelete(couponId);
+     res.json({status:'success',message:'deleted successfully'})
+  }catch(error){
+    console.log(error.message)
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function getallBookings(req,res){
+  try{
+    let viewBookings=await bookingModel.find({vendorId:req.vendorId})
+    console.log(viewBookings)
+    res.json({viewBookings})
+  }catch(error){
     return { status: "failed", message: "Network error" };
   }
 }

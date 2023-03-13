@@ -50,18 +50,27 @@ function success({bookingData}) {
         }
         invoke();
       }, []);
+
+      useEffect(()=>{
+        if (bookingData == undefined) {
+          router.push('/')
+        }
+      },[])
       
   return (
-    
+    <>
+    { bookingData == undefined ? '' : 
    <>
   <HomeNav />
       <div className="container p-[15px]  mx-auto relative">
         {/* <Booking/>  */}
       </div>
       <Newnav />
-   <Success bookingData={bookingData}/>
+   <Success bookingData={bookingData}/> 
    
    </>
+  }
+  </>
   )
 }
 

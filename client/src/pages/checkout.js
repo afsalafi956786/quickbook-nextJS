@@ -54,8 +54,16 @@ function checkout({details}) {
     invoke();
   }, []);
 
+  useEffect(()=>{
+    if(details == undefined){
+      router.push('/')
+    }
+  },[])
+
   
   return (
+    <>
+    {details == undefined ? '':
     <>
   <HomeNav />
       <div className="container p-[15px]  mx-auto relative">
@@ -63,8 +71,9 @@ function checkout({details}) {
       </div>
       <Newnav />
       <CheckOut details={details}/>
+      </>
     
-    
+    }
     </>
   )
 }

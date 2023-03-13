@@ -24,7 +24,7 @@ function UserSide() {
   };
   return (
     <>
-      <div className="flex flex-col  align-middle ml-24 mt-[60%] border-t h-  w-64  px-4 py-8 overflow-y-auto border-r">
+      <div className="flex flex-col  align-middle ml-24 lg:mt-[60%] md:mt-24 sm:mt-28 xs:mt-36 border-t h-  w-64  px-4 py-8 overflow-y-auto border-r">
         <div className="flex flex-col justify-between mt-6">
           <aside>
             <ul>

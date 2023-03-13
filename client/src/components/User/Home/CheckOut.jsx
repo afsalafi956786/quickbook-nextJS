@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PaypalButton from "./PaypalButton";
 import { useState } from "react";
 
+
 function CheckOut({ details }) {
 
   

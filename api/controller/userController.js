@@ -2,9 +2,9 @@
 import userModel from "../models/userShema.js";
 import bcrypt, { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
-import { resolve } from "path";
 import RoomModel from "../models/RoomSchem.js";
 import bookingModel from "../models/bookingSchema.js";
+import reviewModel from "../models/reviewSchema.js";
 
 export async function userCheck(req, res) {
   try {
@@ -267,7 +267,6 @@ export async function createBooking(req,res){
     res.json({status:'success', booked})
 
   }catch(error){
-    console.log('ujhhj7',error.message);
     res.json({ status: "failed", message: error.message });
   }
 }
@@ -300,10 +299,46 @@ export async function bookingData(req, res) {
 export async function canceleBook(req,res){
   try{
     let {bookId}=req.body
-    console.log(bookId);
     let cancel=await bookingModel.findByIdAndUpdate(bookId,{ isCancel:true})
     res.json({status:'success','message':'Your room has been cancelled !!',cancel})
   }catch(error){
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function userReview(req,res){
+  try{
+     let userId=req.userId;
+    let {roomId,feedback,stars,vendorId}=req.body
+    let user=await reviewModel.findOne({userId:userId,roomId:roomId})
+    if(user){
+   res.json({'status':'false','message':'your review is already added',user})
+    }else{
+         let review= await reviewModel.create({
+      roomId:roomId,
+      userId:userId,
+      vendorId:vendorId,
+      feedback:feedback,
+      stars:stars,            
+    })
+  
+    res.json({'status':'success','message':'your feedback is added',review})
+    }
+
+  }catch(error){
+    console.log(error.message)
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function getRoomReview(req,res){
+  try{
+    let roomId=req.params.roomId
+    let userId=req.userId;
+    let review= await reviewModel.find({roomId:roomId}).sort({createdAt:-1}).populate('userId')
+    res.json({review})
+  }catch(error){
+    console.log(error.message)
     res.json({ status: "failed", message: error.message });
   }
 }

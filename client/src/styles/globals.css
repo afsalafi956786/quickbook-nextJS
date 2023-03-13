@@ -16,3 +16,12 @@
       @apply text-3xl sm:text-3xl
     }
 }
+
+.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop{
+  background-color: transparent;
+}
+.css-i3xia6{
+  border:1 !important;
+  box-shadow: none;
+  border-color: rgb(238, 238, 238);
+}

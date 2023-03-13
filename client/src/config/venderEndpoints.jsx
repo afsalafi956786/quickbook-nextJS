@@ -119,3 +119,40 @@ export async function editVendorProfile(formData,header){
     }
 }
 
+export async function createCoupon(formData,header){
+    try{
+        const {data}=await axios.post('/vendor/createCoupon',formData,{headers:header})
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'} 
+    }
+}
+
+export async function viewCoupon (header){
+    try{
+        const {data}=await axios.get('/vendor/viewcoupon',{headers:header})
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'} 
+    }
+}
+
+
+export async function viewBooking (header){
+    try{
+        const {data}=await axios.get('/vendor/viewbooking',{headers:header})
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'} 
+    }
+}
+export async function DeleteCoupon(header,couponId){
+    try{
+        const {data}=await axios.delete(`/vendor/deletecoupn/${couponId}`,{headers:header})
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'} 
+    }
+}
+
+

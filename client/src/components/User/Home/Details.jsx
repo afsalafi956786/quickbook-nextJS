@@ -1,9 +1,8 @@
 import React from "react";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import Crop169OutlinedIcon from "@mui/icons-material/Crop169Outlined";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CreateIcon from "@mui/icons-material/Create";
 import { useRouter } from "next/router";
 import PowerOutlinedIcon from "@mui/icons-material/PowerOutlined";
 import WifiOutlinedIcon from "@mui/icons-material/WifiOutlined";
@@ -14,15 +13,20 @@ import MedicalServicesOutlinedIcon from "@mui/icons-material/MedicalServicesOutl
 import CleaningServicesOutlinedIcon from "@mui/icons-material/CleaningServicesOutlined";
 import HeatPumpOutlinedIcon from "@mui/icons-material/HeatPumpOutlined";
 import { DateRange } from "react-date-range";
-import {ToastContainer,toast} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
+// import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDays, faPerson } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment/moment";
 import { useEffect } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, Transition } from "@headlessui/react";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -30,8 +34,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Details({ rooms }) {
-  console.log(rooms,'[[[[[')
+function Details({ rooms, userReview }) {
+  console.log(userReview, "////");
 
   const router = useRouter();
 
@@ -50,6 +54,29 @@ function Details({ rooms }) {
     adult: 1,
     room: 1,
   });
+
+
+  const [inputValue, setInputValue] = useState('');
+
+
+  const [open, setOpen] = useState(false);
+  let [isOpen, setIsOpen] = useState(false);
+  let [onOpen,setOnOpen]=useState(false)
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
+  function openCoupon() {
+    setOnOpen(true);
+  }
+
+  function closeCoupon() {
+    setOnOpen(false);
+  }
 
   useEffect(() => {
     if (date != null) {
@@ -81,13 +108,13 @@ function Details({ rooms }) {
 
   let handleSubmit = async (event) => {
     event.preventDefault();
-    let day_count = dayCount == 0 ? 1 : dayCount
+    let day_count = dayCount == 0 ? 1 : dayCount;
     const total = options?.room * day_count * rooms?.price;
     const room = options?.room;
     const adult = options?.adult;
     const userToken = localStorage.getItem("usertoken");
-    const price=rooms?.price * options?.room
-    const dayPrice=rooms?.price * day_count
+    const price = rooms?.price * options?.room;
+    const dayPrice = rooms?.price * day_count;
 
     let obj = {
       roomId: rooms._id,
@@ -98,14 +125,13 @@ function Details({ rooms }) {
       total: total,
       location: rooms.location,
       price: price,
-      dayprice:dayPrice,
+      dayprice: dayPrice,
       type: rooms.propertyType,
       daycount: dayCount,
-      img1:rooms.img[0],
-      img2:rooms.img[1],
-      vendorId:rooms.vendorId._id
+      img1: rooms.img[0],
+      img2: rooms.img[1],
+      vendorId: rooms.vendorId._id,
     };
-  
 
     if (obj.Date && obj.Room && obj.Adult && obj.total) {
       router.push({
@@ -130,7 +156,7 @@ function Details({ rooms }) {
       {/* Image gallery */}
       <div className="mx-auto mt-20 max-w-2xl cursor-pointer lg:mt-42 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
         <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
-        <ToastContainer />
+          <ToastContainer />
           <img
             src={rooms?.img[0]}
             alt=""
@@ -323,11 +349,106 @@ function Details({ rooms }) {
                     className="border p-2 border-gray-400 shadow-md "
                     placeholder="enter your coupon code"
                   />
+
+                  {/* coupon modal */}
+
+                  <Transition appear show={onOpen} as={Fragment}>
+                    <Dialog
+                      as="div"
+                      className="relative z-100"
+                      onClose={closeCoupon}
+                    >
+                      <div className="flex items-start justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-scroll">
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0"
+                          enterTo="opacity-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
+                          <div className="fixed scroll-m-2 inset-0 bg-black bg-opacity-25" />
+                        </Transition.Child>
+
+                        <div className="fixed inset-0 overflow-y-auto">
+                          <div className="flex min-h-full items-center justify-center p-4 text-center">
+                            <Transition.Child
+                              as={Fragment}
+                              enter="ease-out duration-300"
+                              enterFrom="opacity-0 scale-95"
+                              enterTo="opacity-100 scale-100"
+                              leave="ease-in duration-200"
+                              leaveFrom="opacity-100 scale-100"
+                              leaveTo="opacity-0 scale-95"
+                            >
+                              <div className="inline-block align-bottom bg-gray-50 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle  sm:max-w-xl sm:w-full">
+                                <div className="flex items-center px-1.5 py-2 border-b border-gray-black">
+                                  <div
+                                    className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
+                                    onClick={() => setOnOpen(false)}
+                                  >
+                                    <CloseIcon className="h-[22px] text-black cursor-pointer" />
+                                  </div>
+                                </div>
+                                <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
+                                  <div className="w-full">
+                                    <h4>Coupons</h4>
+                                    <div className=" flex space-x-3 w-full">
+                                      <div className="flex-grow mt-5">
+                                        <a
+                                          href="#"
+                                          class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                                        >
+                                     
+                                          <div class="flex flex-col justify-between p-4 leading-normal">
+                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                              Noteworthy technology acquisitions
+                                              2021
+                                            </h5>
+                                            <h3 className="text-white">save 10rs</h3>
+                                            <div className="flex">
+                                                  <input onChange={(e) => setInputValue(e.target.value)}
+                                              type="text" value={inputValue}
+                                              className="border p-2 border-gray-400 shadow-md w-[80%] "
+                                              placeholder="enter your coupon code"
+                                            />
+                                            <button onClick={() => navigator.clipboard.writeText(inputValue)} className="ml-auto cursor-pointer rounded px-4 xs:ml-2 bg-sky-600 text-white text-bold hover:bg-sky-800">
+                                            copy
+                                            </button>
+                                            </div>
+                                        
+                                          </div>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </Transition.Child>
+                          </div>
+                        </div>
+                      </div>
+                    </Dialog>
+                  </Transition>
+
+                  {/* coupon modal end */}
+
                   <button className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none">
                     Apply
                   </button>
                 </div>
-                <div className="flex items-center space-x-2 text-xs"></div>
+                <div className="flex items-center space-x-2 text-md ">
+                  {" "}
+                  you have a coupon click{" "}
+                  <span
+                    onClick={openCoupon}
+                    className="ml-2 text-sky-600 cursor-pointer hover:underline"
+                  >
+                    {" "}
+                    here
+                  </span>
+                </div>
               </div>
               <div className="flex justify-between">
                 <span>Discount</span>
@@ -499,90 +620,165 @@ function Details({ rooms }) {
             )}
           </div>
 
+          {/* review section */}
+
           {/* <div className="container mx-auto px-4 flex flex-col lg:items-center justify-between lg:flex-row"> */}
-
-          <div
-            role="list"
-            aria-label="Testimonials"
-            className="xl:w-2/2 grid sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-1 gap-3 flex-wrap justify-center items-start"
-          >
-            <div className="flex space-x-3 ">
-              <h3 className=" text-gray-700 text-2xl">Reviews</h3>
-              <CreateIcon
-                onClick={() => router.push("/review")}
-                className="mt-1 text-sky-600 cursor-pointer hover:text-sky-800"
-              />
-            </div>
-
-            <div className="flex items-center">
-              <div className="flex items-center ml-auto">
-                {[0, 1, 2, 3, 4].map((rating) => (
-                  <StarIcon
-                    key={rating}
-                    className={classNames(
-                      reviews.average > rating
-                        ? "text-yellow-400"
-                        : "text-gray-200",
-                      "h-5 w-5 flex-shrink-0"
-                    )}
-                    aria-hidden="true"
-                  />
-                ))}
+          {userReview?.review?.length == 0 ? (
+            ""
+          ) : (
+            <div
+              role="list"
+              aria-label="Testimonials"
+              className="xl:w-2/2 grid sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-1 gap-3 flex-wrap justify-center items-start"
+            >
+              <div className="flex space-x-3 ">
+                <h3
+                  onClick={() => router.push("/review")}
+                  className=" cursor-pointer hover:text-sky-600 text-gray-700 text-2xl"
+                >
+                  Reviews
+                </h3>
               </div>
-              <p className="sr-only">{reviews.average} out of 5 stars</p>
-              <a
-                href={reviews.href}
-                className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+
+              <div className="flex items-center">
+                <div className="flex items-center ml-auto">
+                  <Stack spacing={1}>
+                    <Rating
+                      name="half-rating-read"
+                      defaultValue={2.5}
+                      precision={0.5}
+                      readOnly
+                    />
+                  </Stack>
+                </div>
+                <p className="sr-only">{reviews.average} out of 5 stars</p>
+                <a
+                  href={reviews.href}
+                  className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                >
+                  {reviews.totalCount} reviews
+                </a>
+              </div>
+              {userReview?.review?.slice(0, 3)?.map((rev) => (
+                <div
+                  key={userReview.review._id}
+                  role="listitem"
+                  className="bg-white shadow rounded p-4 xl:p-6"
+                >
+                  <div className=" flex items-start justify-between">
+                    <div className="mr-6">
+                      <p className=" text-gray-600">{rev?.feedback}</p>
+
+                      <Stack spacing={1}>
+                        <Rating
+                          name="half-rating-read"
+                          defaultValue={rev?.stars}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </Stack>
+                      <p className="mt-2 text-base font-semibold leading-none text-sky-600">
+                        {rev?.userId?.name}
+                      </p>
+                    </div>
+                    <AccountCircleIcon />
+                  </div>
+                </div>
+              ))}
+              <p
+                onClick={openModal}
+                className="text-sky-600 text-md cursor-pointer hover:text-sky-900 ml-auto"
               >
-                {reviews.totalCount} reviews
-              </a>
-            </div>
+                More
+              </p>
 
-            <div role="listitem" className="bg-white shadow rounded p-4 xl:p-6">
-              <div className=" flex items-start justify-between">
-                <div className="mr-6">
-                  <p className=" text-gray-600">
-                    This website has a bunch of amazing components which
-                    improves my design
-                  </p>
-                  <p className="mt-2 text-base font-semibold leading-none text-gray-800">
-                    Anna Smith
-                  </p>
-                </div>
-                <AccountCircleIcon />
-              </div>
-            </div>
+              <Transition appear show={isOpen} as={Fragment}>
+                <Dialog
+                  as="div"
+                  className="relative z-100"
+                  onClose={closeModal}
+                >
+                  <div className="flex items-start justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-scroll">
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <div className="fixed scroll-m-2 inset-0 bg-black bg-opacity-25" />
+                    </Transition.Child>
 
-            <div role="listitem" className="bg-white shadow rounded p-4 xl:p-6">
-              <div className=" flex items-start justify-between">
-                <div className="mr-6">
-                  <p className=" text-gray-600">
-                    This website has a bunch of amazing components which
-                    improves my design
-                  </p>
-                  <p className="mt-2 text-base font-semibold leading-none text-gray-800">
-                    Anna Smith
-                  </p>
-                </div>
-                <AccountCircleIcon />
-              </div>
-            </div>
+                    <div className="fixed inset-0 overflow-y-auto">
+                      <div className="flex min-h-full items-center justify-center p-4 text-center">
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0 scale-95"
+                          enterTo="opacity-100 scale-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100 scale-100"
+                          leaveTo="opacity-0 scale-95"
+                        >
+                          <div className="inline-block align-bottom bg-gray-50 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle  sm:max-w-xl sm:w-full">
+                            <div className="flex items-center px-1.5 py-2 border-b border-gray-black">
+                              <div
+                                className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
+                                onClick={() => setIsOpen(false)}
+                              >
+                                <CloseIcon className="h-[22px] text-black cursor-pointer" />
+                              </div>
+                            </div>
+                            <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
+                              <div className="w-full">
+                                <h4>Reviews</h4>
+                                <div className=" flex space-x-3 w-full">
+                                  <div className="flex-grow mt-5">
+                                    {userReview?.review?.map((rev) => (
+                                      <div
+                                        key={userReview.review._id}
+                                        role="listitem"
+                                        className="bg-white shadow rounded p-4 xl:p-6 mt-4 "
+                                      >
+                                        <div className=" flex items-start justify-between">
+                                          <div className="mr-6">
+                                            <p className=" text-gray-600">
+                                              {rev?.feedback}
+                                            </p>
 
-            <div role="listitem" className="bg-white shadow rounded p-4 xl:p-6">
-              <div className=" flex items-start justify-between">
-                <div className="mr-6">
-                  <p className=" text-gray-600">
-                    This website has a bunch of amazing components which
-                    improves my design
-                  </p>
-                  <p className="mt-2 text-base font-semibold leading-none text-gray-800">
-                    Anna Smith
-                  </p>
-                </div>
-                <AccountCircleIcon />
-              </div>
+                                            <Stack spacing={1}>
+                                              <Rating
+                                                name="half-rating-read"
+                                                defaultValue={rev?.stars}
+                                                precision={0.5}
+                                                readOnly
+                                              />
+                                            </Stack>
+                                            <p className="mt-2 text-base font-semibold leading-none text-sky-600">
+                                              {rev?.userId?.name}
+                                            </p>
+                                          </div>
+                                          <AccountCircleIcon />
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Transition.Child>
+                      </div>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition>
             </div>
-          </div>
+          )}
+          {/* review section end */}
+
           {/* </div> */}
         </div>
       </div>

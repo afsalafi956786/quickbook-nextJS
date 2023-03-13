@@ -21,7 +21,7 @@ const  PaypalButton=({total,bookingData}) =>{
 const handleApprove=async(orderID)=>{
     try{
         const data=await doBooking(bookingData,{'usertoken':localStorage.getItem('usertoken')})
-        console.log(data)
+        console.log(data,'paypal page..............')
      if(data?.status =='success'){
           router.push({
             pathname:'/success',

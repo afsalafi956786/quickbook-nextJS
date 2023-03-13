@@ -16,6 +16,7 @@ function bookings() {
     let dispatch = useDispatch();
     const router=useRouter();
     const [booked,setBooked]=useState({})
+    const [refresh,setRefresh]=useState(false)
   useEffect(() => {
 
         // function created for do await
@@ -66,7 +67,7 @@ function bookings() {
 
         run();
 
-      },[])
+      },[refresh])
 
 
   return (
@@ -84,7 +85,7 @@ function bookings() {
         <UserSide/>
       </div>
         
-      <BookingHistory booked={booked}/>
+      <BookingHistory setRefresh={setRefresh} refresh={refresh} booked={booked}/>
             </div>
        
        

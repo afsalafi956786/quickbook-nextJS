@@ -1,6 +1,6 @@
 import express from "express";
 const router=express.Router();
-import {  SignupValidate,singninValidate,userDataFetch,userCheck,userProfile,changePass,getRoomDetails,getDispalyRoom,getlocalLocation,createBooking,successData ,bookingData,canceleBook} from "../controller/userController.js";
+import {  SignupValidate,singninValidate,userDataFetch,userCheck,userProfile,changePass,getRoomDetails,getDispalyRoom,getlocalLocation,createBooking,successData ,bookingData,canceleBook,userReview,getRoomReview} from "../controller/userController.js";
 import { verifyJWT } from "../middleware/auth.js";
 
 
@@ -21,6 +21,9 @@ router.post('/createbooking',verifyJWT,createBooking)
 router.get('/successData/:roomId',verifyJWT,successData)
 router.get('/bookingData',verifyJWT,bookingData)
 router.post('/cancelbooking',canceleBook)
+router.post('/review',verifyJWT,userReview)
+router.get('/getReiviews/:roomId',verifyJWT,getRoomReview)
+
 
 
 
