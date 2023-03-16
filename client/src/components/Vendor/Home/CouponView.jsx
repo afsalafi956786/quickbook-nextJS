@@ -48,7 +48,7 @@ function CouponView({ coupons,setRefresh,refresh }) {
     obj.startDate = new Date(obj.startDate)
     if(obj.code && obj.discount && obj.startDate && obj.endDate){
       if(inputValue.length <= 12){
-        if(today.getTime()<=obj.startDate.getTime()){                                              
+        if(today.getDay()<=obj.startDate.getDay()){                                              
              const data=await createCoupon(obj,{'vendortoken':localStorage.getItem('vendortoken')})
             console.log(data)
             if(data?.status=='success'){

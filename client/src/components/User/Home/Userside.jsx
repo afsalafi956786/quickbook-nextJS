@@ -1,7 +1,6 @@
 import React from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import BookIcon from "@mui/icons-material/Book";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import LogoutIcon from "@mui/icons-material/Logout";
 import swal from "sweetalert";
 import Link from "next/link";
@@ -31,7 +30,7 @@ function UserSide() {
               <li>
                 <Link
                   href="/profile"
-                  className="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-md "
+                  className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-md "
                   
                 >
                   <PersonIcon />
@@ -50,16 +49,7 @@ function UserSide() {
                   <span className="mx-4 font-medium">Booking history</span>
                 </Link>
               </li>
-              <li>
-                <a
-                  className="flex items-center px-4 py-2 mt-5 text-gray-600 rounded-md hover:bg-gray-200"
-                  href="#"
-                >
-                  <VisibilityIcon />
-
-                  <span className="mx-4 font-medium">Recently viewed</span>
-                </a>
-              </li>
+          
               <li>
                 <a
                   className="flex items-center px-4 py-2 mt-5 text-gray-600 rounded-md hover:bg-gray-200"

@@ -263,7 +263,7 @@ const [booking,setBooking]=useState({})
                 </div>
                 <div className="flex justify-between">
                   <span>Discount</span>
-                  <span>100₹</span>
+                {details?.discount ?  <span>{details?.discount}₹</span> :<span>0₹</span> } 
                 </div>
               </div>
               <div className="pt-4 space-y-2">

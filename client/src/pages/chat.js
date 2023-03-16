@@ -99,6 +99,14 @@ function chat() {
       invoke();
   
     },[user])
+
+    function checkOnlineStatus(chat){
+      const chatMembers=chat?.members.find((member)=>member!==user?._id)
+      const online=onlineUsers.find((user)=>user.userId === chatMembers)
+      return online ? true: false
+    }
+
+
   
   return (
     <>
@@ -112,15 +120,21 @@ function chat() {
  <div class="  rounded-lg py-24 px-24 ">
 
 <h2 className='px-16 text-sky-600 hover:text-sky-800'>Message</h2>
-<div class="flex flex-row justify-between   "> 
-
-
-   {chats?.map((chat)=>(
-     
-       <ChatSidebar  data={chat} currUserId={user?._id} currentChat={currentChat}  setCurrentChat={setCurrentChat} />
-      
-    ))} 
-
+<div class="flex flex-row justify-between "> 
+<div  className="flex flex-col w-2/5 border-r-2 overflow-y-auto   ">
+    <div className="border-b-2 py-4 px-2 xs:hidden sm:block lg:md:block">
+      <input
+        type="text"
+        placeholder="search chatting"
+        className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+      />
+    </div>
+      {chats?.map((chat)=>(
+        
+          <ChatSidebar  data={chat} currUserId={user?._id} currentChat={currentChat}  setCurrentChat={setCurrentChat} online={checkOnlineStatus} />
+          
+        ))} 
+    </div>
 <ChatBox chat={currentChat} currentUser={user?._id} setSendMessage={setSendMessage} recieveMessage={recieveMessage} />
 </div>
 </div>

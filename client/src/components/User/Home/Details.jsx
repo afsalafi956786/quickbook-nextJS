@@ -28,7 +28,9 @@ import { useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Dialog, Transition } from "@headlessui/react";
 import { coupenApply } from "@/config/userEndpoints";
-import MessageIcon from '@mui/icons-material/Message';
+import MessageIcon from "@mui/icons-material/Message";
+import { useSelector } from "react-redux";
+import { createdChat } from "@/config/chatEndpoints";
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -37,8 +39,9 @@ function classNames(...classes) {
 }
 
 function Details({ rooms, userReview, coupon }) {
-  
- 
+  console.log(coupon, "0000000000");
+
+  const user = useSelector((state) => state.users.value);
 
   const router = useRouter();
 
@@ -59,17 +62,15 @@ function Details({ rooms, userReview, coupon }) {
   });
 
   const [inputValue, setInputValue] = useState("");
-  const [discounts,setDiscount]=useState('')
+  const [discounts, setDiscount] = useState(null);
 
   const [open, setOpen] = useState(false);
   let [isOpen, setIsOpen] = useState(false);
   let [onOpen, setOnOpen] = useState(false);
   let [copied, setCopied] = useState("");
 
-  const [couponCode,setCouponCode]=useState('')
-  const [codeErr,setCodeErr]=useState('')
-
-
+  const [couponCode, setCouponCode] = useState("");
+  const [codeErr, setCodeErr] = useState("");
 
   function closeModal() {
     setIsOpen(false);
@@ -100,36 +101,33 @@ function Details({ rooms, userReview, coupon }) {
     }
   }, [date]);
 
-  const applyCoupon=async ()=>{
-    let roomIds=rooms._id
-    let vendorid=rooms?.vendorId?._id
+  const applyCoupon = async () => {
+    let roomIds = rooms._id;
+    let vendorid = rooms?.vendorId?._id;
     // if(couponCode){
-    //   let 
+    //   let
     // }else{
     //   <p className="text-red-600">Invalid  coupon code !!</p>
     // }
-    let obj={
-      roomIds:roomIds,
-      couponCode:couponCode,
-      vendorid:vendorid,
-    }
-    
-    if(obj.couponCode || obj.roomIds ){
-  
-      const data=await coupenApply(obj,{'usertoken':localStorage.getItem('usertoken')})
-      setDiscount(data?.coupon?.discount)
-      if(data?.status =='success'){
+    let obj = {
+      roomIds: roomIds,
+      couponCode: couponCode,
+      vendorid: vendorid,
+    };
+
+    if (obj.couponCode || obj.roomIds) {
       
-        
 
-
+      const data = await coupenApply(obj, {
+        usertoken: localStorage.getItem("usertoken"),
+      });
+      setDiscount(data?.coupon?.discount);
+      if (data?.status == "success") {
       }
-
-    }else{
-      setCodeErr('Please add your coupone code')
-      
+    } else {
+      setCodeErr("Please add your coupone code");
     }
-  }
+  };
 
   const handleOption = (name, operation) => {
     setOptions((prev) => {
@@ -148,7 +146,10 @@ function Details({ rooms, userReview, coupon }) {
   let handleSubmit = async (event) => {
     event.preventDefault();
     let day_count = dayCount == 0 ? 1 : dayCount;
-   let total = options?.room * day_count * rooms?.price;
+    let total = options?.room * day_count * rooms?.price;
+    if (discounts != null) {
+      total = total - discounts;
+    }
     const room = options?.room;
     const adult = options?.adult;
     const userToken = localStorage.getItem("usertoken");
@@ -162,6 +163,7 @@ function Details({ rooms, userReview, coupon }) {
       Room: room,
       Adult: adult,
       total: total,
+      discount: discounts,
       location: rooms.location,
       price: price,
       dayprice: dayPrice,
@@ -190,6 +192,20 @@ function Details({ rooms, userReview, coupon }) {
       });
     }
   };
+
+  async function createChat() {
+    let obj = {
+      senderId: user?._id,
+      receiverId: rooms?.vendorId?._id,
+    };
+    const create = await createdChat(obj);
+    if (create.status == "success") {
+      router.push("/chat");
+    } else {
+      router.push("/chat");
+    }
+  }
+
   return (
     <>
       {/* Image gallery */}
@@ -232,9 +248,12 @@ function Details({ rooms, userReview, coupon }) {
         <div className=" lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
           <div className="flex justify-between">
             <p className="text-orange-700">{rooms?.location}</p>
-          <MessageIcon onClick={()=>router.push('/chat')} className="text-sky-600 hover:text-sky-800 cursor-pointer text-4xl  "/>
+            <MessageIcon
+              onClick={createChat}
+              className="text-sky-600 hover:text-sky-800 cursor-pointer text-4xl  "
+            />
           </div>
-          
+
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl mt-4">
             {rooms?.vendorId?.propertyName}
           </h1>
@@ -386,155 +405,160 @@ function Details({ rooms, userReview, coupon }) {
             </ul>
             <div className="pt-4 space-y-2">
               <div className="p-2">
-               
-                  <div className="flex justify-between">
-                    <input
-                      type="text"
-                      onChange={(e)=>{setCouponCode(e.target.value)}}
-                      className="border p-2 border-gray-400 shadow-md "
-                      placeholder="enter your coupon code"
-                      
-                    />
+                <div className="flex justify-between">
+                  <input
+                    type="text"
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
+                    }}
+                    className="border p-2 border-gray-400 shadow-md "
+                    placeholder="enter your coupon code"
+                  />
 
-                    {/* coupon modal */}
+                  {/* coupon modal */}
 
-                    <Transition appear show={onOpen} as={Fragment}>
-                      <Dialog
-                        as="div"
-                        className="relative z-100"
-                        onClose={closeCoupon}
-                      >
-                        <div className="flex items-start justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-scroll">
-                          <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                          >
-                            <div className="fixed scroll-m-2 inset-0 bg-black bg-opacity-25" />
-                          </Transition.Child>
+                  <Transition appear show={onOpen} as={Fragment}>
+                    <Dialog
+                      as="div"
+                      className="relative z-100"
+                      onClose={closeCoupon}
+                    >
+                      <div className="flex items-start justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-scroll">
+                        <Transition.Child
+                          as={Fragment}
+                          enter="ease-out duration-300"
+                          enterFrom="opacity-0"
+                          enterTo="opacity-100"
+                          leave="ease-in duration-200"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
+                        >
+                          <div className="fixed scroll-m-2 inset-0 bg-black bg-opacity-25" />
+                        </Transition.Child>
 
-                          <div className="fixed inset-0 overflow-y-auto">
-                            <div className="flex min-h-full items-center justify-center p-4 text-center">
-                              <Transition.Child
-                                as={Fragment}
-                                enter="ease-out duration-300"
-                                enterFrom="opacity-0 scale-95"
-                                enterTo="opacity-100 scale-100"
-                                leave="ease-in duration-200"
-                                leaveFrom="opacity-100 scale-100"
-                                leaveTo="opacity-0 scale-95"
-                              >
-                                <div className="inline-block align-bottom bg-gray-50 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle  sm:max-w-xl sm:w-full">
-                                  <div className="flex items-center px-1.5 py-2 border-b border-gray-black">
-                                    <div
-                                      className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
-                                      onClick={() => setOnOpen(false)}
-                                    >
-                                      <CloseIcon className="h-[22px] text-black cursor-pointer" />
-                                    </div>
-                                  </div>
-                                  <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
-                                    <div className="w-full">
-                                      <h4>Coupons</h4>
-                                      {coupon?.coupon?.map((coupn) => (
-                                        <div className=" flex space-x-3 w-full">
-                                          <div className="flex-grow mt-5">
-                                            <a
-                                              href="#"
-                                              class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-sky-100 bg-white-400"
-                                            >
-                                              <div
-                                                key={coupn?._id}
-                                                class="flex flex-col justify-between p-4 leading-normal"
-                                              >
-                                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900  text-black">
-                                                  {
-                                                    rooms?.vendorId
-                                                      ?.propertyName
-                                                  }
-                                                </h5>
-                                                <h3 className=" text-black mb-2">
-                                                  Discount
-                                                  <span className="text-orange-600 text-lg">
-                                                    {" "}
-                                                    ₹{coupn?.discount}
-                                                  </span>
-                                                </h3>
-                                                <div className="flex">
-                                                  <input
-                                                    onChange={(e) =>
-                                                      setInputValue(
-                                                        e.target.value
-                                                      )
-                                                    }
-                                                    type="text"
-                                                    value={coupn?.couponCode}
-                                                    className="border p-2 border-gray-400 shadow-md w-[80%] "
-                                                  />
-                                                  <button
-                                                    onClick={() => {
-                                                      navigator.clipboard.writeText(
-                                                        coupn?.couponCode
-                                                      );
-                                                      setCopied(
-                                                        coupn?.couponCode
-                                                      );
-                                                    }}
-                                                    className="ml-auto cursor-pointer rounded px-4 xs:ml-2 bg-sky-600 text-white text-bold hover:bg-sky-800"
-                                                  >
-                                                    {copied == coupn?.couponCode
-                                                      ? "Copied"
-                                                      : "Copy"}
-                                                  </button>
-                                                </div>
-                                              </div>
-                                              <img
-                                                className="w-[30%] ml-auto "
-                                                src="/logo/qb.png"
-                                              />
-                                            </a>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
+                        <div className="fixed inset-0 overflow-y-auto">
+                          <div className="flex min-h-full items-center justify-center p-4 text-center">
+                            <Transition.Child
+                              as={Fragment}
+                              enter="ease-out duration-300"
+                              enterFrom="opacity-0 scale-95"
+                              enterTo="opacity-100 scale-100"
+                              leave="ease-in duration-200"
+                              leaveFrom="opacity-100 scale-100"
+                              leaveTo="opacity-0 scale-95"
+                            >
+                              <div className="inline-block align-bottom bg-gray-50 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle  sm:max-w-xl sm:w-full">
+                                <div className="flex items-center px-1.5 py-2 border-b border-gray-black">
+                                  <div
+                                    className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
+                                    onClick={() => setOnOpen(false)}
+                                  >
+                                    <CloseIcon className="h-[22px] text-black cursor-pointer" />
                                   </div>
                                 </div>
-                              </Transition.Child>
-                            </div>
+                                <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
+                                  <div className="w-full">
+                                    <h4>Coupons</h4>
+                                    {coupon?.coupon?.map((coupn) => (
+                                      <div className=" flex space-x-3 w-full">
+                                        <div className="flex-grow mt-5">
+                                          <a
+                                            href="#"
+                                            class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-sky-100 bg-white-400"
+                                          >
+                                            <div
+                                              key={coupn?._id}
+                                              class="flex flex-col justify-between p-4 leading-normal"
+                                            >
+                                              <h5 class=" text-2xl font-bold tracking-tight text-gray-900  text-black">
+                                                {rooms?.vendorId?.propertyName}
+                                              </h5>
+                                              <h3 className=" text-black mb-1">
+                                                Discount
+                                                <span className="text-orange-600 text-lg">
+                                                  {" "}
+                                                  ₹{coupn?.discount}
+                                                </span>
+                                                
+                                              </h3>
+                                              <div className="flex">
+                                                 <span className="flex text-orange-600">{moment(coupn?.startDate).format("MMM Do YY")} </span>  <span className="ml-2">to</span>  <span className="text-orange-600 ml-2"> {moment(coupn?.endDate).format("MMM Do YY")}</span> 
+                                              </div>
+                                             
+                                              <div className="flex">
+                                                <input
+                                                  onChange={(e) =>
+                                                    setInputValue(
+                                                      e.target.value
+                                                    )
+                                                  }
+                                                  type="text"
+                                                  value={coupn?.couponCode}
+                                                  className="border p-2 border-gray-400 shadow-md w-[80%] "
+                                                />
+                                                <button
+                                                  onClick={() => {
+                                                    navigator.clipboard.writeText(
+                                                      coupn?.couponCode
+                                                    );
+                                                    setCopied(
+                                                      coupn?.couponCode
+                                                    );
+                                                  }}
+                                                  className="ml-auto cursor-pointer rounded px-4 xs:ml-2 bg-sky-600 text-white text-bold hover:bg-sky-800"
+                                                >
+                                                  {copied == coupn?.couponCode
+                                                    ? "Copied"
+                                                    : "Copy"}
+                                                </button>
+                                              </div>
+                                            </div>
+                                            <img
+                                              className="w-[30%] ml-auto "
+                                              src="/logo/qb.png"
+                                            />
+                                          </a>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </Transition.Child>
                           </div>
                         </div>
-                      </Dialog>
-                    </Transition>
+                      </div>
+                    </Dialog>
+                  </Transition>
 
-                    {/* coupon modal end */}
+                  {/* coupon modal end */}
 
-                    <button onClick={()=>{
+                  <button
+                    onClick={() => {
                       applyCoupon();
-                    }} className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none">
-                      Apply
-                    </button>
-                  </div>
-                  <p className="text-red-500">{codeErr}</p>
-                  <div className="flex items-center space-x-2 text-md ">
+                    }}
+                    className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none"
+                  >
+                    {discounts ? "Applied" : "Apply"}
+                  </button>
+                </div>
+                <p className="text-red-500">{codeErr}</p>
+                <div className="flex items-center space-x-2 text-md ">
+                  {" "}
+                  you have a coupon click{" "}
+                  <span
+                    onClick={openCoupon}
+                    className="ml-2 text-sky-600 cursor-pointer hover:underline"
+                  >
                     {" "}
-                    you have a coupon click{" "}
-                    <span
-                      onClick={openCoupon}
-                      className="ml-2 text-sky-600 cursor-pointer hover:underline"
-                    >
-                      {" "}
-                      here
-                    </span>
-                  </div>
-               
+                    here
+                  </span>
+                </div>
               </div>
+
               <div className="flex justify-between">
                 <span>Discount</span>
-                <span>100₹</span>
+                {discounts ? <span>{discounts}₹</span> : <span>0₹</span>}
               </div>
             </div>
             <div className="pt-4 space-y-2">
@@ -557,11 +581,17 @@ function Details({ rooms, userReview, coupon }) {
                   <span>Total price</span>
                   {dayCount ? (
                     <span className="font-semibold text-orange-900 text-xl">
-                      {options?.room * dayCount * rooms?.price}₹
+                      {discounts
+                        ? options?.room * dayCount * rooms?.price - discounts
+                        : options?.room * dayCount * rooms?.price}
+                      ₹
                     </span>
                   ) : (
                     <span className="font-semibold text-orange-900 text-xl">
-                      {options?.room * rooms?.price}₹
+                      {discounts
+                        ? options?.room * rooms?.price - discounts
+                        : options?.room * rooms?.price}
+                      ₹
                     </span>
                   )}
                 </div>

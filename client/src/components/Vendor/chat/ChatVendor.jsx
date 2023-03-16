@@ -5,6 +5,9 @@ import { getUser } from '@/config/venderEndpoints'
 import { getMessages,addMessage } from '@/config/chatEndpoints'
 import {format} from 'timeago.js'
 import InputEmojiWithRef from 'react-input-emoji'
+import { useSelector } from 'react-redux'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useRef } from 'react'
 
 
 
@@ -12,6 +15,9 @@ function ChatVendor({chat,currentVendor,setSendMessage,recieveMessage}) {
   const [userData,setUserData]=useState(null)
   const [messages,setMessages]=useState([])
   const [newMessage,setNewMessage]=useState('')
+  const scroll =useRef()
+
+  const vendors=useSelector((state)=>state.vendor.value)
 
 
   useEffect(()=>{
@@ -63,13 +69,25 @@ function ChatVendor({chat,currentVendor,setSendMessage,recieveMessage}) {
 
   }
 
+  //always scroll
+  useEffect(()=>{
+    scroll.current?.scrollIntoView({behavior:'smooth'})
+
+  },[messages])
+
   return (
     <>
    
  
   <div className="w-full px-5 flex flex-col justify-between">
     {chat?(
- <div className="flex flex-col mt-5">
+ <div className="flex flex-col mt-5 ">
+   {/* <div  className="cursor-pointer border-b flex  p-4 bg-white fixed w-[57%] -mt-40 ">
+        
+        <AccountCircleIcon className='text-4xl'/> 
+        <h2 className='ml-6 text-gray-700 '>{userData?.name}</h2>
+      </div> */}
+
     {messages?.map((message)=>( 
     
       
@@ -77,11 +95,11 @@ function ChatVendor({chat,currentVendor,setSendMessage,recieveMessage}) {
     {message.senderId == currentVendor ?
   <div className="flex justify-start mb-4">
     <img
-      src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+      src={vendors?.image ? vendors?.image : <AccountCircleIcon/> }
       className="object-cover h-8 w-8 rounded-full"
       alt=""
     />
-    <div
+    <div ref={scroll}
       className="ml-2 py-3 px-4 flex flex-col bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
     >
       {message?.text} 
@@ -96,11 +114,12 @@ function ChatVendor({chat,currentVendor,setSendMessage,recieveMessage}) {
      {message?.text}
      <span className='text-sm text-gray-300 mt-1'>{format(message?.createdAt)}</span>
     </div>
-    <img
+    {/* <img
       src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
       className="object-cover h-8 w-8 rounded-full"
       alt=""
-    />
+    /> */}
+    <AccountCircleIcon/>
   </div>
   }
   </>

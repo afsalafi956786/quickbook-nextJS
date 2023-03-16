@@ -69,3 +69,14 @@ export async function addMessages(datas){
 
 
 }
+
+export async function createdChat (obj){
+    try{
+        const {data}=await axios.post('/chat',obj)
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+
+
+}

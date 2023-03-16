@@ -3,17 +3,19 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import rooms from "@/store/rooms";
+import { useRouter } from "next/router";
+
 
 function HomePage() {
   let room=useSelector((state)=>state.rooms.value)
+  let router=useRouter();
   return (
     <>
       {room?.slice(0,3)?.map((rooms)=>(
       <div key={rooms._id} className= "ml-8 bg-white xs:ml-16  rounded-lg pb-6 shadow-2xl sm:items-center lg:md:h-[100%] min-h-[200px] max-w-[66%] group">
         <div className="overflow-hidden">
-          <img
-            className="group-hover:scale-110 rounded transition-all duration-300 w-full "
+          <img onClick={()=>router.push(`details/${rooms?._id}`)}
+            className="group-hover:scale-110 rounded transition-all duration-300 w-full cursor-pointer "
             src={rooms?.img}
             alt=""
           />
@@ -53,7 +55,7 @@ function HomePage() {
             </p>
         </div>
         <div className="flex flex-col items-center">
-            <button className="bg-sky-600 rounded hover:bg-sky-800 text-white  border p-2 px-12 text-semibold max-w-[240px]">Book Now</button>
+            <button onClick={()=>router.push(`details/${rooms?._id}`)} className="bg-sky-600 rounded hover:bg-sky-800 text-white  border p-2 px-12 text-semibold max-w-[240px]">Book Now</button>
         </div>
     
       </div>

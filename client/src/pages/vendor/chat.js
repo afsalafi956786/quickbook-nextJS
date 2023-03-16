@@ -87,6 +87,12 @@ function chat() {
         invoke();
     
       },[vendors])
+
+      function checkOnlineStatus(chat){
+        const chatMembers=chat?.members.find((member)=>member!==vendors._id)
+        const online=onlinvendors.find((vendors)=>vendors.vendorId === chatMembers)
+        return online ? true: false
+      }
     
   return (
     <>
@@ -97,15 +103,24 @@ function chat() {
    <div class="container mx-auto shadow-lg rounded-lg mt-12">
 
  <h2 className='px-16 text-sky-600 hover:text-sky-800'>Message</h2>
-<div class="flex flex-row justify-between bg-white py-16 "> 
- 
-{/* onClick={()=>setCurrentChat(chat)} */}
-    {chats?.map((chat)=>(
-      
-        <ChatSide data={chat} currVendorId={vendors?._id} currentChat={currentChat} setCurrentChat={setCurrentChat} />
-       
-    ))}
+<div class="flex flex-row justify-between bg-white py-16 xs:w-[120%] sm:w-full lg:md:w-full "> 
 
+<div class="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+    {/* <!-- search compt --> */}
+    <div className="border-b-2 py-4 px-2">
+      <input
+        type="text"
+        placeholder="search chatting"
+        className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+      />
+    </div>
+      {/* onClick={()=>setCurrentChat(chat)} */}
+        {chats?.map((chat)=>(
+          
+            <ChatSide data={chat} currVendorId={vendors?._id} currentChat={currentChat} setCurrentChat={setCurrentChat} online={checkOnlineStatus(chat)} />
+          
+        ))}
+    </div>
 <ChatVendor chat={currentChat} currentVendor={vendors?._id} setSendMessage={setSendMessage} recieveMessage={recieveMessage}/>
 </div>
 </div>

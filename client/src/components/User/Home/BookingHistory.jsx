@@ -316,7 +316,7 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                     <div>
                       <button
                         {...bindTrigger(popupState)}
-                        className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
+                        className="lg:w-auto w-full border border-gray-800 hover:text-white hover:bg-sky-600 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
                       >
                         View
                       </button>

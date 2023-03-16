@@ -1,8 +1,5 @@
 import React from 'react'
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import SendIcon from '@mui/icons-material/Send';
+
 import { useRouter } from 'next/router';
 
 function Footer() {
@@ -14,10 +11,10 @@ function Footer() {
                   <h2 className='text-gray-800 font-sans'>quick book</h2>
                 </div>
                 <div className="flex flex-wrap sm:gap-10 gap-8 items-center justify-center mt-8">
-                    <p onClick={()=>router.push('/room')} className="hover:text-gray-500 text-base cursor-pointer leading-4 text-gray-800">book</p>
-                    <p className="hover:text-gray-500 text-base cursor-pointer leading-4 text-gray-800">Contact us</p>
-                    <p className="hover:text-gray-500 text-base cursor-pointer leading-4 text-gray-800">Terms of Service</p>
-                    <p className="hover:text-gray-500 text-base cursor-pointer leading-4 text-gray-800">Privacy Policy</p>
+                    <p onClick={()=>router.push('/room')} className="hover:text-sky-600 text-base cursor-pointer leading-4 text-gray-800">book</p>
+                    <p className="hover:text-sky-600 text-base cursor-pointer leading-4 text-gray-800">Contact us</p>
+                    <p className="hover:text-sky-600 text-base cursor-pointer leading-4 text-gray-800">Terms of Service</p>
+                    <p className="hover:text-sky-600 text-base cursor-pointer leading-4 text-gray-800">Privacy Policy</p>
                 </div>
                 <div className="flex items-center gap-x-8 mt-6">
                     <div className="cursor-pointer">
@@ -49,10 +46,10 @@ function Footer() {
                 </div>
                 <div className="flex items-center mt-6">
                     <p className="text-base leading-4 text-gray-800">
-                        2021 <span className="font-semibold">qick book</span>
+                        2022 <span className="font-semibold">qick book</span>
                     </p>
                     <div className="border-l border-gray-800 pl-2 ml-2">
-                        <p className="text-base leading-4 text-gray-800">Inc. All righys reserved</p>
+                        <p className="text-base leading-4 text-gray-800">Inc. All right reserved</p>
                     </div>
                 </div>
             </div>
