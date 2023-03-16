@@ -7,7 +7,8 @@ dotenv.config();
 import userRouter from './routes/users.js';
 import adminRouter from './routes/admin.js'
 import venderRouter from './routes/vendor.js';
-
+import chatRouter from './routes/chat.js';
+import messageRoter from './routes/message.js'
 
 
 const port=process.env.PORT
@@ -32,6 +33,9 @@ app.use(express.static("public"))
 app.use('/',userRouter);
 app.use('/vendor',venderRouter);
 app.use('/admin',adminRouter)
+app.use('/chat', chatRouter)
+app.use('/message',messageRoter)
+
 // app.use('/admin',adminRouter);
 
 

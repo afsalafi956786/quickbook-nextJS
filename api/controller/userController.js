@@ -5,6 +5,9 @@ import jwt from "jsonwebtoken";
 import RoomModel from "../models/RoomSchem.js";
 import bookingModel from "../models/bookingSchema.js";
 import reviewModel from "../models/reviewSchema.js";
+import couponModel from "../models/couponShema.js";
+import moment from "moment/moment.js";
+import vendorModel from "../models/vendorShema.js";
 
 export async function userCheck(req, res) {
   try {
@@ -340,5 +343,60 @@ export async function getRoomReview(req,res){
   }catch(error){
     console.log(error.message)
     res.json({ status: "failed", message: error.message });
+  }
+}
+
+
+export async function getallCoupons(req,res){
+  try{
+         let vendorId=req.params.vendorId
+         let coupon=await couponModel.find({vendorId:vendorId})
+         res.json({coupon})
+         
+  }catch(error){
+    console.log(error.message)
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function getcoupenApply(req,res){
+  try{
+       let {couponCode,roomIds,vendorid}=req.body;
+       let today=moment()
+       let userId=req.userId
+       let coupon=await couponModel.findOne({ couponCode:couponCode})
+       if(coupon){
+        let roomCoupon=await couponModel.findOne({vendorId:vendorid})
+        if(roomCoupon){
+        if(coupon.endDate >=today){
+          if(coupon.users.includes(userId)==false){
+            coupon.users.push(userId)
+            coupon.save()
+            res.json({status:'success',message:'coupon applied successfully',coupon})
+          }else{
+            res.json({status:"failed",message:"Coupon already used"})
+          }
+        }else{
+          res.json({statuse:'failed',message:' your Coupon is Expired'})
+        }
+        }else{
+          res.json({status:'failed',message:"Invalide coupon code"})
+        }
+       }else{
+        res.json({status:'failed',message:'Invalid coupon code'})
+       }      
+  }catch(error){
+    console.log(error.message)
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function getUsersId(req,res){
+  try{
+    const userId=req.params.userId
+   const vendor= await vendorModel.findById(userId)
+   res.json({vendor})
+  }catch(error){
+    return { status: "failed", message: "Network error" };
   }
 }

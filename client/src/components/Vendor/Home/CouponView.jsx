@@ -20,7 +20,7 @@ function CouponView({ coupons,setRefresh,refresh }) {
   const [codeErr,setCodeErr]=useState('')
   const [dateErr,setdateErr]=useState('')
 
-  const today = moment().format("DD-MM-YYYY");
+  const today = new Date()
      
   function closeModal() {
     setIsOpen(false);
@@ -44,9 +44,11 @@ function CouponView({ coupons,setRefresh,refresh }) {
       startDate:data.get('startDate'),
       endDate:data.get('endDate')
     }
+  
+    obj.startDate = new Date(obj.startDate)
     if(obj.code && obj.discount && obj.startDate && obj.endDate){
       if(inputValue.length <= 12){
-        if(obj.startDate>=today){                                              
+        if(today.getTime()<=obj.startDate.getTime()){                                              
              const data=await createCoupon(obj,{'vendortoken':localStorage.getItem('vendortoken')})
             console.log(data)
             if(data?.status=='success'){
@@ -261,13 +263,13 @@ function CouponView({ coupons,setRefresh,refresh }) {
                           Start date:{" "}
                           <span className="text-gray-800">
                             {" "}
-                            {coupn?.startDate}
+                            {moment(coupn?.startDate).format("MMM Do YY") }
                           </span>
                         </p>
                         <p className="text-sm leading-none text-gray-600">
                           End date:{" "}
                           <span className="text-gray-800">
-                            {coupn?.endDate}
+                          {moment(coupn?.endDate).format("MMM Do YY") }
                           </span>
                         </p>
                       </div>

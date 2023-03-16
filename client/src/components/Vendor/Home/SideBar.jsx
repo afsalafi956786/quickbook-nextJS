@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 
+
 function SideBar() {
   const router=useRouter();
 
@@ -67,6 +68,9 @@ function SideBar() {
             </div>
             <span className='md:hidden xs:hidden  lg:xl:block'>Bookings</span>
         </Link>
+
+     
+
         <Link href='/vendor/coupon'  className='flex items-center gap-[1rem] xs:w-[55%]  lg:md:w-[75%]  h-[2.5rem] ml-[2rem]  relative px-3 transition-all ease-in-out delay-150 hover:-y-1 hover:scale-110 duration-100 cursor-pointer text-xl active:bg-gray-300 hover:bg-gray-300 ml-0 rounded-lg bg-gray-100'>
             <div  className=''>
               <LocalOfferIcon/>

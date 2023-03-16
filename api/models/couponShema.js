@@ -1,10 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const couponShema=new mongoose.Schema({
-    userId:{
-        type:Schema.Types.ObjectId,
-        ref:'user'
-    },
+ 
     vendorId:{
         type:Schema.Types.ObjectId,
         required:true,
@@ -22,6 +19,14 @@ const couponShema=new mongoose.Schema({
     endDate:{
         type:Date,
     },
+    users:[{
+        type:Schema.Types.ObjectId,
+        ref:'users'
+    }],
+    isExpire:{
+        type:Boolean,
+        default:false
+    }
 },{
     timestamps:true,
 })

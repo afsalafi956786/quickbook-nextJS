@@ -27,6 +27,8 @@ import moment from "moment/moment";
 import { useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Dialog, Transition } from "@headlessui/react";
+import { coupenApply } from "@/config/userEndpoints";
+import MessageIcon from '@mui/icons-material/Message';
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -34,8 +36,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Details({ rooms, userReview }) {
-  console.log(userReview, "////");
+function Details({ rooms, userReview, coupon }) {
+  
+ 
 
   const router = useRouter();
 
@@ -55,13 +58,18 @@ function Details({ rooms, userReview }) {
     room: 1,
   });
 
-
-  const [inputValue, setInputValue] = useState('');
-
+  const [inputValue, setInputValue] = useState("");
+  const [discounts,setDiscount]=useState('')
 
   const [open, setOpen] = useState(false);
   let [isOpen, setIsOpen] = useState(false);
-  let [onOpen,setOnOpen]=useState(false)
+  let [onOpen, setOnOpen] = useState(false);
+  let [copied, setCopied] = useState("");
+
+  const [couponCode,setCouponCode]=useState('')
+  const [codeErr,setCodeErr]=useState('')
+
+
 
   function closeModal() {
     setIsOpen(false);
@@ -92,6 +100,37 @@ function Details({ rooms, userReview }) {
     }
   }, [date]);
 
+  const applyCoupon=async ()=>{
+    let roomIds=rooms._id
+    let vendorid=rooms?.vendorId?._id
+    // if(couponCode){
+    //   let 
+    // }else{
+    //   <p className="text-red-600">Invalid  coupon code !!</p>
+    // }
+    let obj={
+      roomIds:roomIds,
+      couponCode:couponCode,
+      vendorid:vendorid,
+    }
+    
+    if(obj.couponCode || obj.roomIds ){
+  
+      const data=await coupenApply(obj,{'usertoken':localStorage.getItem('usertoken')})
+      setDiscount(data?.coupon?.discount)
+      if(data?.status =='success'){
+      
+        
+
+
+      }
+
+    }else{
+      setCodeErr('Please add your coupone code')
+      
+    }
+  }
+
   const handleOption = (name, operation) => {
     setOptions((prev) => {
       if (operation != "d") {
@@ -109,7 +148,7 @@ function Details({ rooms, userReview }) {
   let handleSubmit = async (event) => {
     event.preventDefault();
     let day_count = dayCount == 0 ? 1 : dayCount;
-    const total = options?.room * day_count * rooms?.price;
+   let total = options?.room * day_count * rooms?.price;
     const room = options?.room;
     const adult = options?.adult;
     const userToken = localStorage.getItem("usertoken");
@@ -190,8 +229,12 @@ function Details({ rooms, userReview }) {
 
       {/* Product info */}
       <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
-        <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-          <p className="text-orange-700">{rooms?.location}</p>
+        <div className=" lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
+          <div className="flex justify-between">
+            <p className="text-orange-700">{rooms?.location}</p>
+          <MessageIcon onClick={()=>router.push('/chat')} className="text-sky-600 hover:text-sky-800 cursor-pointer text-4xl  "/>
+          </div>
+          
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl mt-4">
             {rooms?.vendorId?.propertyName}
           </h1>
@@ -343,112 +386,151 @@ function Details({ rooms, userReview }) {
             </ul>
             <div className="pt-4 space-y-2">
               <div className="p-2">
-                <div className="flex justify-between">
-                  <input
-                    type="text"
-                    className="border p-2 border-gray-400 shadow-md "
-                    placeholder="enter your coupon code"
-                  />
+               
+                  <div className="flex justify-between">
+                    <input
+                      type="text"
+                      onChange={(e)=>{setCouponCode(e.target.value)}}
+                      className="border p-2 border-gray-400 shadow-md "
+                      placeholder="enter your coupon code"
+                      
+                    />
 
-                  {/* coupon modal */}
+                    {/* coupon modal */}
 
-                  <Transition appear show={onOpen} as={Fragment}>
-                    <Dialog
-                      as="div"
-                      className="relative z-100"
-                      onClose={closeCoupon}
-                    >
-                      <div className="flex items-start justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-scroll">
-                        <Transition.Child
-                          as={Fragment}
-                          enter="ease-out duration-300"
-                          enterFrom="opacity-0"
-                          enterTo="opacity-100"
-                          leave="ease-in duration-200"
-                          leaveFrom="opacity-100"
-                          leaveTo="opacity-0"
-                        >
-                          <div className="fixed scroll-m-2 inset-0 bg-black bg-opacity-25" />
-                        </Transition.Child>
+                    <Transition appear show={onOpen} as={Fragment}>
+                      <Dialog
+                        as="div"
+                        className="relative z-100"
+                        onClose={closeCoupon}
+                      >
+                        <div className="flex items-start justify-center min-h-[800px] sm:min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-scroll">
+                          <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <div className="fixed scroll-m-2 inset-0 bg-black bg-opacity-25" />
+                          </Transition.Child>
 
-                        <div className="fixed inset-0 overflow-y-auto">
-                          <div className="flex min-h-full items-center justify-center p-4 text-center">
-                            <Transition.Child
-                              as={Fragment}
-                              enter="ease-out duration-300"
-                              enterFrom="opacity-0 scale-95"
-                              enterTo="opacity-100 scale-100"
-                              leave="ease-in duration-200"
-                              leaveFrom="opacity-100 scale-100"
-                              leaveTo="opacity-0 scale-95"
-                            >
-                              <div className="inline-block align-bottom bg-gray-50 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle  sm:max-w-xl sm:w-full">
-                                <div className="flex items-center px-1.5 py-2 border-b border-gray-black">
-                                  <div
-                                    className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
-                                    onClick={() => setOnOpen(false)}
-                                  >
-                                    <CloseIcon className="h-[22px] text-black cursor-pointer" />
+                          <div className="fixed inset-0 overflow-y-auto">
+                            <div className="flex min-h-full items-center justify-center p-4 text-center">
+                              <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 scale-95"
+                                enterTo="opacity-100 scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 scale-100"
+                                leaveTo="opacity-0 scale-95"
+                              >
+                                <div className="inline-block align-bottom bg-gray-50 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle  sm:max-w-xl sm:w-full">
+                                  <div className="flex items-center px-1.5 py-2 border-b border-gray-black">
+                                    <div
+                                      className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
+                                      onClick={() => setOnOpen(false)}
+                                    >
+                                      <CloseIcon className="h-[22px] text-black cursor-pointer" />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
-                                  <div className="w-full">
-                                    <h4>Coupons</h4>
-                                    <div className=" flex space-x-3 w-full">
-                                      <div className="flex-grow mt-5">
-                                        <a
-                                          href="#"
-                                          class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-                                        >
-                                     
-                                          <div class="flex flex-col justify-between p-4 leading-normal">
-                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                              Noteworthy technology acquisitions
-                                              2021
-                                            </h5>
-                                            <h3 className="text-white">save 10rs</h3>
-                                            <div className="flex">
-                                                  <input onChange={(e) => setInputValue(e.target.value)}
-                                              type="text" value={inputValue}
-                                              className="border p-2 border-gray-400 shadow-md w-[80%] "
-                                              placeholder="enter your coupon code"
-                                            />
-                                            <button onClick={() => navigator.clipboard.writeText(inputValue)} className="ml-auto cursor-pointer rounded px-4 xs:ml-2 bg-sky-600 text-white text-bold hover:bg-sky-800">
-                                            copy
-                                            </button>
-                                            </div>
-                                        
+                                  <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
+                                    <div className="w-full">
+                                      <h4>Coupons</h4>
+                                      {coupon?.coupon?.map((coupn) => (
+                                        <div className=" flex space-x-3 w-full">
+                                          <div className="flex-grow mt-5">
+                                            <a
+                                              href="#"
+                                              class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row hover:bg-sky-100 bg-white-400"
+                                            >
+                                              <div
+                                                key={coupn?._id}
+                                                class="flex flex-col justify-between p-4 leading-normal"
+                                              >
+                                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900  text-black">
+                                                  {
+                                                    rooms?.vendorId
+                                                      ?.propertyName
+                                                  }
+                                                </h5>
+                                                <h3 className=" text-black mb-2">
+                                                  Discount
+                                                  <span className="text-orange-600 text-lg">
+                                                    {" "}
+                                                    ₹{coupn?.discount}
+                                                  </span>
+                                                </h3>
+                                                <div className="flex">
+                                                  <input
+                                                    onChange={(e) =>
+                                                      setInputValue(
+                                                        e.target.value
+                                                      )
+                                                    }
+                                                    type="text"
+                                                    value={coupn?.couponCode}
+                                                    className="border p-2 border-gray-400 shadow-md w-[80%] "
+                                                  />
+                                                  <button
+                                                    onClick={() => {
+                                                      navigator.clipboard.writeText(
+                                                        coupn?.couponCode
+                                                      );
+                                                      setCopied(
+                                                        coupn?.couponCode
+                                                      );
+                                                    }}
+                                                    className="ml-auto cursor-pointer rounded px-4 xs:ml-2 bg-sky-600 text-white text-bold hover:bg-sky-800"
+                                                  >
+                                                    {copied == coupn?.couponCode
+                                                      ? "Copied"
+                                                      : "Copy"}
+                                                  </button>
+                                                </div>
+                                              </div>
+                                              <img
+                                                className="w-[30%] ml-auto "
+                                                src="/logo/qb.png"
+                                              />
+                                            </a>
                                           </div>
-                                        </a>
-                                      </div>
+                                        </div>
+                                      ))}
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </Transition.Child>
+                              </Transition.Child>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Dialog>
-                  </Transition>
+                      </Dialog>
+                    </Transition>
 
-                  {/* coupon modal end */}
+                    {/* coupon modal end */}
 
-                  <button className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none">
-                    Apply
-                  </button>
-                </div>
-                <div className="flex items-center space-x-2 text-md ">
-                  {" "}
-                  you have a coupon click{" "}
-                  <span
-                    onClick={openCoupon}
-                    className="ml-2 text-sky-600 cursor-pointer hover:underline"
-                  >
+                    <button onClick={()=>{
+                      applyCoupon();
+                    }} className="bg-sky-600 cursor-pointer p-1 rounded text-white text-semibold px-5 focus:border-none">
+                      Apply
+                    </button>
+                  </div>
+                  <p className="text-red-500">{codeErr}</p>
+                  <div className="flex items-center space-x-2 text-md ">
                     {" "}
-                    here
-                  </span>
-                </div>
+                    you have a coupon click{" "}
+                    <span
+                      onClick={openCoupon}
+                      className="ml-2 text-sky-600 cursor-pointer hover:underline"
+                    >
+                      {" "}
+                      here
+                    </span>
+                  </div>
+               
               </div>
               <div className="flex justify-between">
                 <span>Discount</span>

@@ -155,4 +155,15 @@ export async function DeleteCoupon(header,couponId){
     }
 }
 
+export async function getUser(userId){
+    try{
+        const {data}=await axios.get(`/vendor/vendors/${userId}`)
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+
+
+}
+
 

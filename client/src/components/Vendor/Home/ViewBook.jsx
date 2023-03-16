@@ -3,8 +3,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import Popover from "@mui/material/Popover";
 import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
 import Typography from "@mui/material/Typography";
+import moment from "moment/moment";
+import { useRouter } from "next/router";
 function ViewBook({ booking }) {
-  console.log(booking, "555555555555555555555,,,,,,,,,,");
+  console.log(booking)
+  let router=useRouter();
+  const today = moment().format("DD-MM-YYYY");
+  console.log(today)
   return (
     <>
       <div className="py-20">
@@ -139,14 +144,15 @@ function ViewBook({ booking }) {
               <tbody>
                 {booking?.viewBookings?.map((book) => (
                     
+
                   
                   <tr className="h-24 border-gray-300  dark:border-gray-200 border-b ">
                     
-                    <td className="pl-8 pr-6 text-left whitespace-no-wrap text-sm text-sky-800 text-black tracking-normal leading-4">
+                    <td className="pl-8 pr-6 text-left  whitespace-no-wrap text-sm text-sky-800 text-black tracking-normal leading-4">
                 
-                      <img
-                        className="p-3 cursor-pointer"
-                        src="https://images.pexels.com/photos/1571458/pexels-photo-1571458.jpeg?cs=srgb&dl=pexels-vecislavas-popa-1571458.jpg&fm=jpg"
+                      <img 
+                        className="lg:md:p-3   cursor-pointer"
+                        src={book?.roomId?.img[0]}
                       />
                     </td>
 
@@ -159,7 +165,7 @@ function ViewBook({ booking }) {
                           <PersonIcon className="text-gray-700" />
                         </div>
                         <p className="ml-2 text-black text-sky-600 tracking-normal leading-4 text-sm">
-                          Carrie Anthony
+                          {book?.userId?.name}
                         </p>
                       </div>
                     </td>
@@ -180,9 +186,18 @@ function ViewBook({ booking }) {
                     <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
                       {book?.checkIn}
                     </td>
-                    <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
+                    {!book?.isCancel && today > book?.checkOut ? (
+                         <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
+                      {book?.checkOut}
+                      <p className="text-green-500">Complete</p>
+                    </td>
+                    ):(
+                      <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
                       {book?.checkOut}
                     </td>
+                    )}
+                 
+                    
                     <td className="pr-6">
                       <td className="text-sm pr-6 whitespace-no-wrap text-black text-orange-600 tracking-normal leading-4">
                         {book?.days}
@@ -233,22 +248,34 @@ function ViewBook({ booking }) {
                               <Typography sx={{ p: 2 }}>
                                 <div className="">
                                   <p className="text-base leading-4 mt-4 text-gray-600">
-                                    total Rooms: {book?.rooms}
+                                    Total Rooms: {book?.rooms}
                                   </p>
                                   <p className="text-base leading-4 mt-4 text-gray-600">
-                                    Check-Out Date:
+                                    Room rate: {book?.roomId?.price}
                                   </p>
                                   <p className="text-base leading-4 mt-4 text-gray-600">
-                                    No. of Rooms:
+                                    Adult:{book?.adult}
+                                  </p>
+                                  <p className="text-base leading-4 mt-4 text-gray-600">
+                                    Property Type: {book?.type}
                                   </p>
                                   <p className="md:w-96 text-base leading-normal text-gray-600 mt-4">
-                                    No.of days:
+                                      Location:{book?.location}
+                                  </p>
+                                  <p className="md:w-96 text-base text-lg leading-normal text-sky-600 mt-4">
+                                    Customer Information
                                   </p>
                                   <p className="md:w-96 text-base leading-normal text-gray-600 mt-4">
-                                    property Type:
+                                    Name: {book?.userId?.name}
                                   </p>
                                   <p className="md:w-96 text-base leading-normal text-gray-600 mt-4">
-                                    No.of adults:
+                                    Address: {book?.address}
+                                  </p>
+                                  <p className="md:w-96 text-base leading-normal text-gray-600 mt-4">
+                                    Phone number: {book?.phone}
+                                  </p>
+                                  <p className="md:w-96 text-base leading-normal text-gray-600 mt-4">
+                                    Address: {book?.address}
                                   </p>
                                 </div>
                               </Typography>

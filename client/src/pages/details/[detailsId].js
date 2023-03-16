@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react"
 import React from 'react'
-import {userDatafetch,getDisplayDetails,getReviews } from "@/config/userEndpoints";
+import {userDatafetch,getDisplayDetails,getReviews,getCoupons } from "@/config/userEndpoints";
 
 
 function details({rooms}) {
@@ -16,6 +16,7 @@ function details({rooms}) {
   let router = useRouter();
   const room=useSelector((state)=>state.rooms.value);
   const [reviews,setReviews]=useState({})
+  const [coupon,setCoupon]=useState([])
 
   useEffect(() => {
     // function created for do await
@@ -60,15 +61,21 @@ function details({rooms}) {
   useEffect(()=>{
     async function run(){
     const review= await getReviews(rooms?._id,{'usertoken':localStorage.getItem('usertoken')})
-    setReviews(review)
-
-    
-     
+    setReviews(review) 
     }
     run();
 
   },[])
 
+  useEffect(()=>{
+    async function run(){
+      const couponCode=await getCoupons(rooms?.vendorId?._id)
+      setCoupon(couponCode)
+    
+    }
+    run();
+
+  },[])
   
 
   
@@ -82,7 +89,7 @@ function details({rooms}) {
     <Newnav/> 
    </div>
 
-    <Details rooms={rooms} userReview={reviews} />
+    <Details rooms={rooms} userReview={reviews} coupon={coupon} />
    <Map rooms={rooms}/>
     <Footer/>
 

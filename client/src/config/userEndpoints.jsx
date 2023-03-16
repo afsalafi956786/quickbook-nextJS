@@ -149,3 +149,32 @@ export async function getReviews (roomId,header){
     }
 }
 
+export async function  getCoupons(vendorId){
+    try{
+        const {data}=await axios.get(`/getCoupon/${vendorId}`)
+        return data;
+    }catch(error){
+         return {status:'failed', message:'Network error'}
+    }
+}
+
+export async function  coupenApply(obj,header){
+    try{
+        const {data}=await axios.post('/coupnapply',obj,{headers:header})
+        return data;
+    }catch(error){
+         return {status:'failed', message:'Network error'}
+    }
+}
+
+
+export async function getUsers(userId){
+    try{
+        const {data}=await axios.get(`/users/${userId}`)
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+
+
+}

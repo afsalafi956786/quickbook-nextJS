@@ -1,4 +1,5 @@
 import vendorModel from "../models/vendorShema.js";
+import userModel from "../models/userShema.js";
 import bcrypt, { hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import RoomModel from "../models/RoomSchem.js";
@@ -357,9 +358,18 @@ export async function deleteCoupon(req,res){
 
 export async function getallBookings(req,res){
   try{
-    let viewBookings=await bookingModel.find({vendorId:req.vendorId})
-    console.log(viewBookings)
+    let viewBookings=await bookingModel.find({vendorId:req.vendorId}).populate('userId').populate('roomId').populate('userId')
     res.json({viewBookings})
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function getVendorId(req,res){
+  try{
+    const userId=req.params.userId
+   const user= await userModel.findById(userId)
+   res.json({user})
   }catch(error){
     return { status: "failed", message: "Network error" };
   }

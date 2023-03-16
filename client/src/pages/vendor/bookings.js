@@ -40,9 +40,9 @@ function bookings() {
       useEffect(()=>{
        async function run(){
           const bookings=await viewBooking({'vendortoken':localStorage.getItem('vendortoken')})
+          console.log(bookings,'iiiiiiiiiiiiiiiiiiiiii');
           setBooking(bookings)
           
-
         }
 
         run()
