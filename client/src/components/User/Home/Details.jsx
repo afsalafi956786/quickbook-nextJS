@@ -32,11 +32,11 @@ import MessageIcon from "@mui/icons-material/Message";
 import { useSelector } from "react-redux";
 import { createdChat } from "@/config/chatEndpoints";
 
-const reviews = { href: "#", average: 4, totalCount: 117 };
+// const reviews = { href: "#", average: 4, totalCount: 117 };
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+// function classNames(...classes) {
+//   return classes.filter(Boolean).join(" ");
+// }
 
 function Details({ rooms, userReview, coupon }) {
   console.log(coupon, "0000000000");
@@ -104,11 +104,6 @@ function Details({ rooms, userReview, coupon }) {
   const applyCoupon = async () => {
     let roomIds = rooms._id;
     let vendorid = rooms?.vendorId?._id;
-    // if(couponCode){
-    //   let
-    // }else{
-    //   <p className="text-red-600">Invalid  coupon code !!</p>
-    // }
     let obj = {
       roomIds: roomIds,
       couponCode: couponCode,
@@ -123,6 +118,28 @@ function Details({ rooms, userReview, coupon }) {
       });
       setDiscount(data?.coupon?.discount);
       if (data?.status == "success") {
+        toast.success( `Wow! ${data?.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          }); 
+      }else{
+        toast.error(`OOPS! ${data?.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+
       }
     } else {
       setCodeErr("Please add your coupone code");
@@ -264,7 +281,7 @@ function Details({ rooms, userReview, coupon }) {
           {/* Reviews */}
           <div className="mt-6">
             <h3 className="sr-only">Reviews</h3>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <div className="flex items-center">
                 {[0, 1, 2, 3, 4].map((rating) => (
                   <StarIcon
@@ -286,7 +303,7 @@ function Details({ rooms, userReview, coupon }) {
               >
                 {reviews.totalCount} reviews
               </a>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col max-w-md p-6 space-y-4 divide-y mt-8 sm:w-96 sm:p-10 border border-gray-300 shadow-lg dark:text-gray-700">
@@ -763,13 +780,13 @@ function Details({ rooms, userReview, coupon }) {
                     />
                   </Stack>
                 </div>
-                <p className="sr-only">{reviews.average} out of 5 stars</p>
+                {/* <p className="sr-only">{reviews.average} out of 5 stars</p>
                 <a
                   href={reviews.href}
                   className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
                 >
                   {reviews.totalCount} reviews
-                </a>
+                </a> */}
               </div>
               {userReview?.review?.slice(0, 3)?.map((rev) => (
                 <div

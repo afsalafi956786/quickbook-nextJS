@@ -66,6 +66,12 @@ function HomeNav() {
                   >
                     Bookings History
                   </li>
+                  <li
+                    onClick={() => router.push("/")}
+                    className="cursor-pointer text-gray-600  text-md hover:bg-sky-600 dark:hover:text-white leading-3 tracking-normal py-3 hover:bg-gray-100 px-3 font-normal"
+                  >
+                    Home
+                  </li>
                 
                   <li
                     onClick={logout}

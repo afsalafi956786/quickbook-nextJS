@@ -1,6 +1,7 @@
 import React from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import BookIcon from "@mui/icons-material/Book";
+import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from "@mui/icons-material/Logout";
 import swal from "sweetalert";
 import Link from "next/link";
@@ -47,6 +48,16 @@ function UserSide() {
                   <BookIcon />
 
                   <span className="mx-4 font-medium">Booking history</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/"
+                  className="flex items-center px-4 py-2 mt-5 text-gray-600 rounded-md hover:bg-gray-200"
+                 
+                >
+                  < HomeIcon/>
+
+                  <span className="mx-4 font-medium">Home</span>
                 </Link>
               </li>
           

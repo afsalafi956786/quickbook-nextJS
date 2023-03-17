@@ -227,176 +227,195 @@ export async function getDispalyRoom(req, res) {
 export async function getlocalLocation(req, res) {
   try {
     const loc = req.query.place;
-    const gotLocations=await RoomModel.find({location:loc})
-   res.json(gotLocations);
-
+    const gotLocations = await RoomModel.find({ location: loc });
+    res.json(gotLocations);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.json({ status: "failed", message: error.message });
   }
 }
 
-export async function createBooking(req,res){
-  try{
-    const userId=req.userId
-    let obj=req.body
-    console.log(obj.vendorId,'id obj vanu')
-    let booked=await bookingModel.create({
-      roomId:obj.roomId,
-      userId:userId,
-      vendorId:obj.vendorId,
-      address:obj.address,
-      phone:obj.phone,
-      place:obj.place,
-      adult:obj.adult,
-      checkIn:obj.check_in,
-      checkOut:obj.check_out,
-      rooms:obj.roomCount,
-      location:obj.location,
-      RoomPrice:obj.price,
-      type:obj.type,
-      total:obj.total,
-      days:obj.dayCount,
+export async function createBooking(req, res) {
+  try {
+    const userId = req.userId;
+    let obj = req.body;
+    console.log(obj.vendorId, "id obj vanu");
+    let booked = await bookingModel.create({
+      roomId: obj.roomId,
+      userId: userId,
+      vendorId: obj.vendorId,
+      address: obj.address,
+      phone: obj.phone,
+      place: obj.place,
+      adult: obj.adult,
+      checkIn: obj.check_in,
+      checkOut: obj.check_out,
+      rooms: obj.roomCount,
+      location: obj.location,
+      RoomPrice: obj.price,
+      type: obj.type,
+      total: obj.total,
+      days: obj.dayCount,
       // img1:obj.img1,
       // img2:obj.img2,
-                   
-    })
+    });
 
-   
-    //     let rooms=await RoomModel.findById(obj.roomId)
-    //     rooms.totalrooms=rooms.totalrooms-obj.rooms
-    //     rooms.save()
+    // let rooms=await RoomModel.findById(obj.roomId)
+    // rooms.totalrooms=rooms.totalrooms-obj.rooms
+    // rooms.save()
 
-    res.json({status:'success', booked})
-
-  }catch(error){
+    res.json({ status: "success", booked });
+  } catch (error) {
     res.json({ status: "failed", message: error.message });
   }
 }
-
 
 export async function successData(req, res) {
   try {
-      const roomId=req.params.roomId;
-        const userId=req.userId
-        const roomInfo=await RoomModel.findById(roomId).populate('vendorId')
-        console.log(roomInfo,';;;;;')
-        res.json(roomInfo)
+    const roomId = req.params.roomId;
+    const userId = req.userId;
+    const roomInfo = await RoomModel.findById(roomId).populate("vendorId");
+    res.json(roomInfo);
   } catch (error) {
     res.json({ status: "failed", message: error.message });
   }
 }
-
 
 export async function bookingData(req, res) {
   try {
-               
-    const userId=req.userId;
-    const bookedRooms=await bookingModel.find({userId:userId}).sort({createdAt:-1}).populate('roomId').populate('vendorId')
-    res.json({bookedRooms})
+    const userId = req.userId;
+    const bookedRooms = await bookingModel
+      .find({ userId: userId })
+      .sort({ createdAt: -1 })
+      .populate("roomId")
+      .populate("vendorId");
+    console.log(bookedRooms);
+    res.json({ bookedRooms });
   } catch (error) {
     res.json({ status: "failed", message: error.message });
   }
 }
 
-export async function canceleBook(req,res){
-  try{
-    let {bookId}=req.body
-    let cancel=await bookingModel.findByIdAndUpdate(bookId,{ isCancel:true})
-    res.json({status:'success','message':'Your room has been cancelled !!',cancel})
-  }catch(error){
+export async function canceleBook(req, res) {
+  try {
+    let { bookId } = req.body;
+    let cancel = await bookingModel.findByIdAndUpdate(bookId, {
+      isCancel: true,
+    });
+    res.json({
+      status: "success",
+      message: "Your room has been cancelled !!",
+      cancel,
+    });
+  } catch (error) {
     res.json({ status: "failed", message: error.message });
   }
 }
 
-export async function userReview(req,res){
-  try{
-     let userId=req.userId;
-    let {roomId,feedback,stars,vendorId}=req.body
-    let user=await reviewModel.findOne({userId:userId,roomId:roomId})
-    if(user){
-   res.json({'status':'false','message':'your review is already added',user})
-    }else{
-         let review= await reviewModel.create({
-      roomId:roomId,
-      userId:userId,
-      vendorId:vendorId,
-      feedback:feedback,
-      stars:stars,            
-    })
-  
-    res.json({'status':'success','message':'your feedback is added',review})
+export async function userReview(req, res) {
+  try {
+    let userId = req.userId;
+    let { roomId, feedback, stars, vendorId } = req.body;
+    let user = await reviewModel.findOne({ userId: userId, roomId: roomId });
+    if (user) {
+      res.json({
+        status: "false",
+        message: "your review is already added",
+        user,
+      });
+    } else {
+      let review = await reviewModel.create({
+        roomId: roomId,
+        userId: userId,
+        vendorId: vendorId,
+        feedback: feedback,
+        stars: stars,
+      });
+
+      res.json({
+        status: "success",
+        message: "your feedback is added",
+        review,
+      });
     }
-
-  }catch(error){
-    console.log(error.message)
+  } catch (error) {
+    console.log(error.message);
     res.json({ status: "failed", message: error.message });
   }
 }
 
-export async function getRoomReview(req,res){
-  try{
-    let roomId=req.params.roomId
-    let userId=req.userId;
-    let review= await reviewModel.find({roomId:roomId}).sort({createdAt:-1}).populate('userId')
-    res.json({review})
-  }catch(error){
-    console.log(error.message)
+export async function getRoomReview(req, res) {
+  try {
+    let roomId = req.params.roomId;
+    let userId = req.userId;
+    let review = await reviewModel
+      .find({ roomId: roomId })
+      .sort({ createdAt: -1 })
+      .populate("userId");
+    res.json({ review });
+  } catch (error) {
+    console.log(error.message);
     res.json({ status: "failed", message: error.message });
   }
 }
 
-
-export async function getallCoupons(req,res){
-  try{
-         let vendorId=req.params.vendorId
-         let coupon=await couponModel.find({vendorId:vendorId})
-         res.json({coupon})
-         
-  }catch(error){
-    console.log(error.message)
+export async function getallCoupons(req, res) {
+  try {
+    let vendorId = req.params.vendorId;
+    let coupon = await couponModel.find({ vendorId: vendorId });
+    res.json({ coupon });
+  } catch (error) {
+    console.log(error.message);
     res.json({ status: "failed", message: error.message });
   }
 }
 
-export async function getcoupenApply(req,res){
-  try{
-       let {couponCode,roomIds,vendorid}=req.body;
-       let today=moment()
-       let userId=req.userId
-       let coupon=await couponModel.findOne({ couponCode:couponCode})
-       if(coupon){
-        let roomCoupon=await couponModel.findOne({vendorId:vendorid})
-        if(roomCoupon){
-        if(coupon.endDate >=today){
-          if(coupon.users.includes(userId)==false){
-            coupon.users.push(userId)
-            coupon.save()
-            res.json({status:'success',message:'coupon applied successfully',coupon})
-          }else{
-            res.json({status:"failed",message:"Coupon already used"})
+export async function getcoupenApply(req, res) {
+  try {
+    let { couponCode, roomIds, vendorid } = req.body;
+    let today = moment();
+    let userId = req.userId;
+    let coupon = await couponModel.findOne({ couponCode: couponCode });
+    if (coupon) {
+      let roomCoupon = await couponModel.findOne({ vendorId: vendorid });
+      if (roomCoupon) {
+        if (coupon.endDate >= today) {
+          // if(coupon.startDate >=today){
+          if (coupon.users.includes(userId) == false) {
+            coupon.users.push(userId);
+            coupon.save();
+            res.json({
+              status: "success",
+              message: "coupon applied successfully",
+              coupon,
+            });
+            // }else{
+            //   res.json({status:'failed',message:'please check the coupon date'})
+            // }
+          } else {
+            res.json({ status: "failed", message: "Coupon already used" });
           }
-        }else{
-          res.json({statuse:'failed',message:' your Coupon is Expired'})
+        } else {
+          res.json({ statuse: "failed", message: " your Coupon is Expired" });
         }
-        }else{
-          res.json({status:'failed',message:"Invalide coupon code"})
-        }
-       }else{
-        res.json({status:'failed',message:'Invalid coupon code'})
-       }      
-  }catch(error){
-    console.log(error.message)
+      } else {
+        res.json({ status: "failed", message: "Invalide coupon code" });
+      }
+    } else {
+      res.json({ status: "failed", message: "Invalid coupon code" });
+    }
+  } catch (error) {
+    console.log(error.message);
     res.json({ status: "failed", message: error.message });
   }
 }
 
-export async function getUsersId(req,res){
-  try{
-    const userId=req.params.userId
-   const vendor= await vendorModel.findById(userId)
-   res.json({vendor})
-  }catch(error){
+export async function getUsersId(req, res) {
+  try {
+    const userId = req.params.userId;
+    const vendor = await vendorModel.findById(userId);
+    res.json({ vendor });
+  } catch (error) {
     return { status: "failed", message: "Network error" };
   }
 }

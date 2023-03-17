@@ -117,9 +117,9 @@ function ChatVendor({chat,currentVendor,setSendMessage,recieveMessage}) {
     {/* <img
       src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
       className="object-cover h-8 w-8 rounded-full"
-      alt=""
+      alt="
     /> */}
-    <AccountCircleIcon/>
+    <AccountCircleIcon className='text-3xl'/>
   </div>
   }
   </>

@@ -115,7 +115,7 @@ async function handlSend(e){
           alt=""
         /> */}
 
-        <AccountCircleIcon/>
+        <AccountCircleIcon className='text-3xl'/>
         <div   ref={scroll}
           className="ml-2 py-3 px-4 flex flex-col bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white "
         >

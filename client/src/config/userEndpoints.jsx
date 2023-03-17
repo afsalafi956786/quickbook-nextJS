@@ -61,7 +61,7 @@ export async function editPassword(formData,header){
 
 }
 
-export async function getRoomInfo(req,res){
+export async function getRoomInfo(){
     try{
         const {data}=await axios.get('/getRoomdetails')
         return data;

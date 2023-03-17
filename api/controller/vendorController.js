@@ -6,8 +6,6 @@ import RoomModel from "../models/RoomSchem.js";
 import couponModel from "../models/couponShema.js";
 import bookingModel from "../models/bookingSchema.js";
 
-
-
 export async function vendorCheck(req, res) {
   try {
     let obj = req.body;
@@ -309,68 +307,69 @@ export async function editProfile(req, res) {
   }
 }
 
-export async function createCoupon(req,res){
-  try{
+export async function createCoupon(req, res) {
+  try {
+    let obj = req.body;
+    let vendorId = req.vendorId;
 
-let obj=req.body;
-let vendorId=req.vendorId
+    // const coupon=await couponModel.findOne({couponCode:obj.couponCode})
+    // if(!coupen){
+    // }
 
-
-// const coupon=await couponModel.findOne({couponCode:obj.couponCode})
-// if(!coupen){
-// }
-
-
- let coupons=await couponModel.create({
-  vendorId:vendorId,
-  couponCode:obj.code,
-  discount:obj.discount,
-  startDate:obj.startDate,
-  endDate:obj.endDate,
-})
-console.log(coupons)
-res.json({status:'success',message:'your coupon is added',coupons})
-  }catch(error){
-    console.log(error.message)
+    let coupons = await couponModel.create({
+      vendorId: vendorId,
+      couponCode: obj.code,
+      discount: obj.discount,
+      startDate: obj.startDate,
+      endDate: obj.endDate,
+    });
+    console.log(coupons);
+    res.json({ status: "success", message: "your coupon is added", coupons });
+  } catch (error) {
+    console.log(error.message);
     return { status: "failed", message: "Network error" };
   }
 }
 
-export async function viewCoupons(req,res){
-  try{
-     let couponShow=await couponModel.find({vendorId:req.vendorId})
-    res.json(couponShow)
-  }catch(error){
+export async function viewCoupons(req, res) {
+  try {
+    let couponShow = await couponModel.find({ vendorId: req.vendorId });
+    res.json(couponShow);
+  } catch (error) {
     return { status: "failed", message: "Network error" };
   }
 }
 
-export async function deleteCoupon(req,res){
-  try{
-   let couponId=req.params.couponId
-     await couponModel.findByIdAndDelete(couponId);
-     res.json({status:'success',message:'deleted successfully'})
-  }catch(error){
-    console.log(error.message)
+export async function deleteCoupon(req, res) {
+  try {
+    let couponId = req.params.couponId;
+    await couponModel.findByIdAndDelete(couponId);
+    res.json({ status: "success", message: "deleted successfully" });
+  } catch (error) {
+    console.log(error.message);
     return { status: "failed", message: "Network error" };
   }
 }
 
-export async function getallBookings(req,res){
-  try{
-    let viewBookings=await bookingModel.find({vendorId:req.vendorId}).populate('userId').populate('roomId').populate('userId')
-    res.json({viewBookings})
-  }catch(error){
+export async function getallBookings(req, res) {
+  try {
+    let viewBookings = await bookingModel
+      .find({ vendorId: req.vendorId })
+      .populate("userId")
+      .populate("roomId")
+      .populate("userId");
+    res.json({ viewBookings });
+  } catch (error) {
     return { status: "failed", message: "Network error" };
   }
 }
 
-export async function getVendorId(req,res){
-  try{
-    const userId=req.params.userId
-   const user= await userModel.findById(userId)
-   res.json({user})
-  }catch(error){
+export async function getVendorId(req, res) {
+  try {
+    const userId = req.params.userId;
+    const user = await userModel.findById(userId);
+    res.json({ user });
+  } catch (error) {
     return { status: "failed", message: "Network error" };
   }
 }
