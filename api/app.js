@@ -18,11 +18,13 @@ const app=express();
 connectDb(DATABASE_URL)
 
 //cors connect
-app.use(cors({
-    origin: ['http://localhost:3000'],
-    methods:["GET","POST","DELETE","PUT","PATCH"],
-    credentials:true,
-}))
+app.use(cors(
+//     {
+//     origin: ['http://localhost:3000'],
+//     methods:["GET","POST","DELETE","PUT","PATCH"],
+//     credentials:true,
+// }
+))
 app.use(logger("dev"))
 app.use(express.urlencoded({ extended:false }));
 app.use(express.json({extended: false, limit: '50mb'}));
@@ -30,11 +32,11 @@ app.use(express.static("public"))
 
 
 //routes
-app.use('/',userRouter);
-app.use('/vendor',venderRouter);
-app.use('/admin',adminRouter)
-app.use('/chat', chatRouter)
-app.use('/message',messageRoter)
+app.use('/api/',userRouter);
+app.use('/api/vendor',venderRouter);
+app.use('/api/admin',adminRouter)
+app.use('/api/chat', chatRouter)
+app.use('/api/message',messageRoter)
 
 // app.use('/admin',adminRouter);
 
