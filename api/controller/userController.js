@@ -204,7 +204,7 @@ export async function changePass(req, res) {
 //display room details fetch
 export async function getRoomDetails(req, res) {
   try {
-    let roomData = await RoomModel.find({ isBanned: false }).populate(
+    let roomData = await RoomModel.find({ isBanned: false,isApproved:true}).populate(
       "vendorId"
     );
     res.json({ status: "success", roomData });
@@ -380,7 +380,6 @@ export async function getcoupenApply(req, res) {
       let roomCoupon = await couponModel.findOne({ vendorId: vendorid });
       if (roomCoupon) {
         if (coupon.endDate >= today) {
-          // if(coupon.startDate >=today){
           if (coupon.users.includes(userId) == false) {
             coupon.users.push(userId);
             coupon.save();
@@ -389,9 +388,6 @@ export async function getcoupenApply(req, res) {
               message: "coupon applied successfully",
               coupon,
             });
-            // }else{
-            //   res.json({status:'failed',message:'please check the coupon date'})
-            // }
           } else {
             res.json({ status: "failed", message: "Coupon already used" });
           }
@@ -416,6 +412,18 @@ export async function getUsersId(req, res) {
     const vendor = await vendorModel.findById(userId);
     res.json({ vendor });
   } catch (error) {
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function getBookingDates(req,res){
+  try{
+    const roomId=req.params.roomId
+    const dates=await bookingModel.find({roomId:roomId})
+    console.log(dates)
+    res.json({dates})
+
+  }catch(error){
     return { status: "failed", message: "Network error" };
   }
 }

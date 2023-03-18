@@ -12,9 +12,10 @@ function CheckOut({ details }) {
 const [change,setChange]=useState(false);
 const [booking,setBooking]=useState({})
 
-  const startDate = moment(details?.Date[0].startDate).format("DD-MM-YYYY");
-  const endDate = moment(details?.Date[0].endDate).format("DD-MM-YYYY");
-
+  const startDate = details?.Date[0].startDate
+  const endDate = details?.Date[0].endDate
+  console.log(startDate,'---------start')
+  console.log(endDate,']]]]]]]]]]]]]]]]]]end')
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -235,8 +236,8 @@ const [booking,setBooking]=useState({})
                 </li>
                 <li className="flex items-start justify-between">
                   <div className="border p-2 ml-6 mt-4">
-                    {startDate} <spna className="text-orange-500">to</spna>{" "}
-                    {endDate}
+                    {moment(startDate).format("DD-MM-YYYY")} <spna className="text-orange-500">to</spna>{" "}
+                    {moment(endDate).format("DD-MM-YYYY")}
                   </div>
                 </li>
 

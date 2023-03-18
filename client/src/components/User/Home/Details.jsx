@@ -27,7 +27,7 @@ import moment from "moment/moment";
 import { useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Dialog, Transition } from "@headlessui/react";
-import { coupenApply } from "@/config/userEndpoints";
+import { coupenApply,DatesCheck } from "@/config/userEndpoints";
 import MessageIcon from "@mui/icons-material/Message";
 import { useSelector } from "react-redux";
 import { createdChat } from "@/config/chatEndpoints";
@@ -190,14 +190,20 @@ function Details({ rooms, userReview, coupon }) {
       img2: rooms.img[1],
       vendorId: rooms.vendorId._id,
     };
-
-    if (obj.Date && obj.Room && obj.Adult && obj.total) {
-      router.push({
-        pathname: "/checkout",
-        query: { obj: JSON.stringify(obj) },
-      });
-    } else {
-      toast.error(`OOPS! something error`, {
+    let bookDate = await DatesCheck(rooms?._id)
+    let startDate = new Date(obj.Date[0].startDate).getTime()
+    let endDate = new Date(obj.Date[0].endDate).getTime()
+    let existedDates = false
+    bookDate.dates.map((doc)=>{
+      doc.checkIn = new Date(doc.checkIn).getTime()
+      doc.checkOut = new Date(doc.checkOut).getTime()
+      //date calculation start to end
+      if (doc.checkIn <= startDate && startDate <= doc.checkOut || doc.checkIn <= endDate && endDate <= doc.checkOut) {
+        existedDates = true
+      }
+    })
+    if (existedDates) {
+      toast.error(`Already booked this date`, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -207,7 +213,26 @@ function Details({ rooms, userReview, coupon }) {
         progress: undefined,
         theme: "dark",
       });
+    }else{
+      if (obj.Date && obj.Room && obj.Adult && obj.total) {
+        router.push({
+          pathname: "/checkout",
+          query: { obj: JSON.stringify(obj) },
+        });
+      } else {
+        toast.error(`OOPS! something error`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
     }
+    
   };
 
   async function createChat() {

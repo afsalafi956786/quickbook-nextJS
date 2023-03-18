@@ -11,11 +11,20 @@ import { vendorDatafetch,viewBooking } from '@/config/venderEndpoints'
 import { useState } from 'react'
 
 
+
 function bookings() {
   // let user=useSelector((state)=>(state.users.value))
     const router=useRouter();
     let dispatch=useDispatch()
     const [booking,setBooking]=useState([])
+    // const [loading,setLoading]=useState(false)
+    // const [currentPage,setCurrentPage]=useState(1)
+    // const [postPerPage,setPostPerPage]=useState(5);
+
+         
+  
+
+  
     useEffect(()=>{
         async function invoke(){
             if(localStorage.getItem('vendortoken')){
@@ -39,14 +48,20 @@ function bookings() {
 
       useEffect(()=>{
        async function run(){
+        // setLoading(true)
           const bookings=await viewBooking({'vendortoken':localStorage.getItem('vendortoken')})
-          console.log(bookings,'iiiiiiiiiiiiiiiiiiiiii');
-          setBooking(bookings)
-          
+          setBooking(bookings.viewBookings)
+          // setLoading(false)
         }
 
         run()
       },[])
+   
+      //get index of last post
+      // const indexofLastPost=currentPage * postPerPage
+      // const indexOfFirstPost=indexofLastPost - postPerPage
+      // const currentPost=booking.slice(indexOfFirstPost,indexofLastPost)
+
 
   return (
     <>

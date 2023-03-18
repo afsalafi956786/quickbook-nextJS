@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { SuccessDetails } from "@/config/userEndpoints";
 import { useState } from "react";
 // import moment from "moment/moment";
+import moment from "moment/moment";
 import { useRouter } from "next/router";
 
 function Success({bookingData}) {
@@ -73,12 +74,11 @@ function Success({bookingData}) {
                     <p className="text-md font-semibold text-orange-600">location: {roomData?.location} </p>
                     <div className="flex flex-row justify-start  space-x-4 md:space-x-6 items-start mt-4 ">
                       <p className="text-md leading-none text-gray-600">
-                        Check In: <span className="text-sky-600">{bookingData?.checkIn} </span>
+                        Check In: <span className="text-sky-600">{moment(bookingData?.checkIn).format("DD-MM-YYYY")} </span>
                       </p>
                       <p className="text-md leading-none text-gray-600">
-                        Check out: <span className="text-sky-600"> {bookingData?.checkOut}</span>
+                        Check out: <span className="text-sky-600"> {moment(bookingData?.checkOut ).format("DD-MM-YYYY")}</span>
                       </p>
-                      
                     </div>
                   </div>
                   <div className="flex mt-4 md:mt-0 md:justify-end items-center w-full ">

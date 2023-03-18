@@ -178,3 +178,12 @@ export async function getUsers(userId){
 
 
 }
+
+export async function DatesCheck(roomId){
+    try{
+        const {data}= await axios.get(`/getDates/${roomId}`)
+        return data
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}

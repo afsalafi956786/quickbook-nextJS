@@ -160,10 +160,10 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                   ₹
                 </p>
                 <p>
-                  Check in : <span className=" ">{booking?.checkIn}</span>
+                  Check in : <span className=" ">{moment(booking?.checkIn).format("DD-MM-YYYY")}</span>
                 </p>
                 <p>
-                  Check out : <span className=" ">{booking?.checkOut}</span>
+                  Check out : <span className=" "> {moment(booking?.checkOut).format("DD-MM-YYYY")}</span>
                 </p>
                 {booking?.isCancel ? (
                   <p className="text-lg font-semibold text-center lg:leading-9 text-red-600 lg:pb-6 md:pb-4 pb-2">
@@ -173,7 +173,7 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                   ""
                 )}
 
-                {!booking?.isCancel && today > booking?.checkOut ? (
+                {!booking?.isCancel && today > moment(booking?.checkOut).format("DD-MM-YYYY") ? (
                   <p className="text-lg font-semibold text-center lg:leading-9 text-green-600 lg:pb-6 md:pb-4 pb-2">
                     Thank you for using our Room
                   </p>
@@ -182,7 +182,7 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                 )}
               </div>
               <div className="md:flex flex items-center justify-center space-x-2">
-                {!booking?.isCancel && today <= booking?.checkIn ? (
+                {!booking?.isCancel && today <= moment(booking?.checkIn).format("DD-MM-YYYY") ? (
                   <button
                     onClick={async () => {
                       swal({
@@ -218,7 +218,7 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                 ) : (
                   ""
                 )}
-                {!booking?.isCancel && today > booking?.checkIn ? (
+                {!booking?.isCancel && today > moment(booking?.checkIn).format("DD-MM-YYYY")   ? (
                   <button
                     onClick={handleOpen}
                     className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-green-700 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
@@ -335,10 +335,10 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                         <Typography sx={{ p: 2 }}>
                           <div className="">
                             <p className="text-base leading-4 mt-4 text-gray-600">
-                              Check-in Date: {booking?.checkIn}
+                              Check-in Date:  {moment(booking?.checkIn).format("DD-MM-YYYY")}
                             </p>
                             <p className="text-base leading-4 mt-4 text-gray-600">
-                              Check-Out Date: {booking?.checkOut}
+                              Check-Out Date:  {moment(booking?.checkOut).format("DD-MM-YYYY")}
                             </p>
                             <p className="text-base leading-4 mt-4 text-gray-600">
                               No. of Rooms: {booking?.rooms}
@@ -359,7 +359,7 @@ function BookingHistory({ setRefresh, refresh, booked }) {
                   )}
                 </PopupState>
               </div>
-              {!booking?.isCancel && today > booking?.checkOut ? (
+              {!booking?.isCancel && today > moment(booking?.checkOut).format("DD-MM-YYYY") ? (
                 <svg
                   viewBox="0 0 24 24"
                   className="text-green-600 w-16 h-12 mx-auto  lg:mt-44 sm:pb-4 xs:pb-4"
