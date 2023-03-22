@@ -8,7 +8,7 @@ import Router, { useRouter } from 'next/router'
 import VendorNav from '@/components/Vendor/Nav/VendorNav'
 import { useDispatch, useSelector } from 'react-redux'
 import {vendor} from '@/store/vendor'
-import { vendorDash, fetchRooms,vendorReview, vendorGraph,getSalesReport} from '@/config/venderEndpoints'
+import { vendorDash, fetchRooms, vendorGraph} from '@/config/venderEndpoints'
 import {rooms} from '@/store/rooms'
 
 
@@ -75,13 +75,13 @@ function home() {
      load()
   },[])
 
-  useEffect(()=>{
-    async function running(){
-      const salesReport=await getSalesReport({'vendortoken':localStorage.getItem('vendortoken')})
+  // useEffect(()=>{
+  //   async function running(){
+  //     const salesReport=await getSalesReport({'vendortoken':localStorage.getItem('vendortoken')})
 
-    }
-    running()
-  },[])
+  //   }
+  //   running()
+  // },[])
   
 
 

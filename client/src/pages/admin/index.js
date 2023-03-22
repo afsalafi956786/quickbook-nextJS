@@ -39,7 +39,9 @@ const [graph,setGraph]=useState([])
    async function run(){
       const userCount=await userCountFetch({'admintoken':localStorage.getItem('admintoken')})
       setAdminDash(userCount)
+      // if(Array.isArray()){
       setRevenue(userCount.totalrevenue)
+      // }
 
     }
     run()
@@ -48,7 +50,9 @@ const [graph,setGraph]=useState([])
    useEffect(()=>{
     async function running(){
       const adminGraph=await totalRevenue()
-      setGraph(adminGraph)
+        setGraph(adminGraph)
+      
+      
 
     }
     running();

@@ -4,7 +4,8 @@ import GraphAdmin from './GraphAdmin';
 
 
 function Dashboard({adminDash,revenue,graph}) {
-
+  // if(Array.isArray(adminGraph)){
+  
   return (
     <div className=''>
         <h1 className='lg:md:mt-4 lg:md:-ml-1 tex sm:ml-24 xs:ml-16'>Dashboard</h1>
@@ -22,7 +23,9 @@ function Dashboard({adminDash,revenue,graph}) {
           <div className="py-10 ">
             <span className="text-lg font-semibold -ml-16">
               Total:{" "}
-              <span className="text-orange-600"> ₹{(revenue[0]?.total*20)/100}</span>
+              {Array.isArray(revenue) ? 
+              <span className="text-orange-600"> ₹{(revenue[0]?.total*20)/100}</span> :''
+                  }          
             </span>
           </div>
         </div>

@@ -160,6 +160,7 @@ export async function vendorLogin(req, res) {
       res.json({ status: "failed", message: "All fields are required" });
     }
   } catch (error) {
+    console.log(error.message)
     res.json({ status: "failed", message: "error.message" });
   }
 }
@@ -486,19 +487,19 @@ export async function vendorGraph(req,res){
 }
 
 
-export async function getVendorSales(req,res){
-  try{
-    let vendorId=req.vendorId
-    // const salesReport=await bookingModel.aggregate([
-    //   {
-    //     $match: {
-    //       createdAt: { $gte: moment().startOf('month').format('YYYY-MM-DD') }
-    //     }
-    //   }
-    // ])
-    // console.log(salesReport,"fghjkhugfcv");
-    // console.log(moment().startOf('month').format('YYYY-MM-DD'));
-  }catch(error){
-    return { status: "failed", message: "Network error" };
-  }
-}
+// export async function getVendorSales(req,res){
+//   try{
+//     let vendorId=req.vendorId
+//     // const salesReport=await bookingModel.aggregate([
+//     //   {
+//     //     $match: {
+//     //       createdAt: { $gte: moment().startOf('month').format('YYYY-MM-DD') }
+//     //     }
+//     //   }
+//     // ])
+//     // console.log(salesReport,"fghjkhugfcv");
+//     // console.log(moment().startOf('month').format('YYYY-MM-DD'));
+//   }catch(error){
+//     return { status: "failed", message: "Network error" };
+//   }
+// }

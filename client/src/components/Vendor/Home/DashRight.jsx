@@ -18,7 +18,7 @@ if(Array.isArray(revi)){
     
   },[])
   return (
-    <div className='w-[98%] lg:md:h-[17%]  bg-gray-50 rounded p-[1rem] gap-[1rem] flex flex-col text-md lg:md:mt-28 xs:mt-12 sm:mt-12'>
+    <div className='w-[98%] lg:md:h-[25%]  bg-gray-50 rounded p-[1rem] gap-[1rem] flex flex-col text-md lg:md:mt-28 xs:mt-12 sm:mt-12'>
       <div className=''>
         <h3>Recent reviews</h3>
      {

@@ -2,7 +2,7 @@ import React from "react";
 import "react-circular-progressbar/dist/styles.css";
 import RecentBook from "./RecentBook";
 import Graph from "@/components/Vendor/Home/Graph";
-import Sales from '@/components/Vendor/Home/Sales';
+// import Sales from '@/components/Vendor/Home/Sales';
 
 
 
@@ -68,12 +68,12 @@ function MainDash({ dashDetails, monthlySalary }) {
     
         
       </div>
-
-      <RecentBook recent={dashDetails} />
-      <h3 className="mt-32 text-xl ml-6">Total Revenue</h3>
+<h3 className="mt-32 text-xl ml-6">Total Revenue</h3>
       <Graph monthlySalary={monthlySalary} />
-      <h3 className="mt-32 text-xl ml-4">Total Revenue</h3>
-      <Sales/>
+      <RecentBook recent={dashDetails} />
+      
+      {/* <h3 className="mt-32 text-xl ml-4">Total Revenue</h3> */}
+      {/* <Sales/> */}
     </div>
   );
 }

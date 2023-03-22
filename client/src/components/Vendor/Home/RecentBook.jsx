@@ -22,7 +22,7 @@ const rows = [
 
 export default function RecentBook({recent}) {
   return (
-    <div className=' xs:px-3'>
+    <div className=' xs:px-3 pb-16'>
         <h3 className='mt-12 pb-6 px-8 font-bold text-lg'>Recent Bookings</h3>
   
     <TableContainer component={Paper}

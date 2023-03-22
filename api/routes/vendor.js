@@ -1,6 +1,6 @@
 import express from "express";
 const router=express.Router();
-import { vendorSignup,vendorLogin,getVendorSales,fechroomDetails,vendorGraph,fetchReviews,vendorData,vendorDashBoard,vendorCheck,addRoom,getRoomview,getvendorRoom,getEditRoom,editRoomData,delelteRoom,editProfile,createCoupon ,viewCoupons, getallBookings,deleteCoupon,getVendorId} from '../controller/vendorController.js'
+import { vendorSignup,vendorLogin,fechroomDetails,vendorGraph,fetchReviews,vendorData,vendorDashBoard,vendorCheck,addRoom,getRoomview,getvendorRoom,getEditRoom,editRoomData,delelteRoom,editProfile,createCoupon ,viewCoupons, getallBookings,deleteCoupon,getVendorId} from '../controller/vendorController.js'
 import { vendorJWT } from "../middleware/auth.js";
 
 
@@ -26,7 +26,7 @@ router.get('/vendorDash',vendorJWT,vendorDashBoard)
 router.get('/fetchrooms',vendorJWT,fechroomDetails)
 router.get('/vendorreview',vendorJWT,fetchReviews)
 router.get('/vendorgraph',vendorJWT,vendorGraph)
-router.get('/vendorsales',vendorJWT,getVendorSales)
+// router.get('/vendorsales',vendorJWT,getVendorSales)
 
 
 export default router;

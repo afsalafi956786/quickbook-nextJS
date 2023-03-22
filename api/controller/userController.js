@@ -149,6 +149,7 @@ export async function singninValidate(req, res) {
       }
     }
   } catch (error) {
+  
     res.json({ status: "failed", message: error.message });
   }
 }

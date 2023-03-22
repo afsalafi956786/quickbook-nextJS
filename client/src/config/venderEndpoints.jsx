@@ -204,11 +204,11 @@ export async function  vendorGraph(header){
     }
 }
 
-export async function  getSalesReport(header){
-    try{
-        const {data}=await axios.get('/vendor/vendorsales',{headers:header})
-        return data;
-    }catch(error){
-      return {status:'failed',message:'Network error'}
-    }
-}
+// export async function  getSalesReport(header){
+//     try{
+//         const {data}=await axios.get('/vendor/vendorsales',{headers:header})
+//         return data;
+//     }catch(error){
+//       return {status:'failed',message:'Network error'}
+//     }
+// }
