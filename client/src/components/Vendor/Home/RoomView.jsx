@@ -124,6 +124,7 @@ function RoomView({roomData,setRefresh,refresh}) {
                           }).then(async (wilDelete)=>{
                             if(wilDelete){
                                  const data=await DeleteRoom({'vendortoken':localStorage.getItem('vendortoken')},rooms._id)
+                                 console.log(data,'----+++++++++++++++')
                                  if(data?.status=='success'){
                                   setRefresh(!refresh)
                                   toast.success( `Wow! ${data?.message}`, {

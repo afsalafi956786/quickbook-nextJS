@@ -187,3 +187,31 @@ export async function DatesCheck(roomId){
         return {status:'failed',message:'Network error'}
     }
 }
+
+
+export async function popularAmenities(obj,header){
+    try{
+        const {data}= await axios.post('/getAmenities',obj,{headers:header})
+        return data
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function getCategories(obj,header){
+    try{
+        const {data}= await axios.post('/getCategories',obj,{headers:header})
+        return data
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function getType(obj,header){
+    try{
+        const {data}= await axios.post('/getType',obj,{headers:header})
+        return data
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}

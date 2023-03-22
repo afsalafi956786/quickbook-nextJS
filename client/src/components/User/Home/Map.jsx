@@ -10,8 +10,8 @@ function Map({ rooms }) {
   const [p1, setP1] = useState(76.2673);
   const [p2, setP2] = useState(9.9312);
   useEffect(() => {
-    setP1(rooms.longitude);
-    setP2(rooms.latitude);
+    setP1(rooms?.longitude);
+    setP2(rooms?.latitude);
     const map = new mapboxgl.Map({
       container: "map",
       style: "mapbox://styles/mapbox/streets-v12",

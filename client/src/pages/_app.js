@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
   const [otpconfirm,otpSetConfirm]=useState({})
   const[vendorDetails,setVendorDetails]=useState({})
   const [vendorOtp,setVendorOtp]=useState({})
-  const [ socket, setSocket ] = useState(io('http://localhost:8800'))
+  const [ socket, setSocket ] = useState(io('https://socket.electronicsmart.shop'))
 
 
   return(

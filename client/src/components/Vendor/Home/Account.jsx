@@ -139,9 +139,9 @@ function Account({setRefresh,refresh}) {
 
   return (
     <>
-    <div class="h-full px-6 py-32 ">
+    <div className="h-full px-6 py-32 ">
  
- <div class="border-b-2 block md:flex">
+ <div className="border-b-2 block md:flex">
  <ToastContainer />
 
    <div className="w-full md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md">

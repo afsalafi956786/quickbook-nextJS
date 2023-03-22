@@ -5,8 +5,9 @@ import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
 import Typography from "@mui/material/Typography";
 import moment from "moment/moment";
 import { useRouter } from "next/router";
-import { viewBooking } from "@/config/venderEndpoints";
-import ReactPaginate from 'react-paginate';
+
+// import { viewBooking } from "@/config/venderEndpoints";
+// import ReactPaginate from 'react-paginate';
 function ViewBook({ booking }) {
   // if(loading){
   //   return <h2>Loading...</h2>
@@ -14,10 +15,10 @@ function ViewBook({ booking }) {
   let router=useRouter();
   const today = moment().format("DD-MM-YYYY");
 
-  const objectsPerPage = 6;
-  const pageCount = Math.ceil(booking.length / objectsPerPage);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentData, setCurrentData] = useState(booking.slice(1, objectsPerPage));
+  // const objectsPerPage = 6;
+  // const pageCount = Math.ceil(booking.length / objectsPerPage);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [currentData, setCurrentData] = useState(booking.slice(1, objectsPerPage));
  
 
   // useEffect(()=>{
@@ -30,12 +31,12 @@ function ViewBook({ booking }) {
   //   invoke();
   // },[])
 
-  const handlePageChange = ({ selected }) => {
-    const startIndex = selected * objectsPerPage;
-    const endIndex = startIndex + objectsPerPage;
-    setCurrentPage(selected);
-    setCurrentData(booking.slice(startIndex, endIndex));
-  };
+  // const handlePageChange = ({ selected }) => {
+  //   const startIndex = selected * objectsPerPage;
+  //   const endIndex = startIndex + objectsPerPage;
+  //   setCurrentPage(selected);
+  //   setCurrentData(booking.slice(startIndex, endIndex));
+  // };
 
 
   return (
@@ -130,7 +131,7 @@ function ViewBook({ booking }) {
                 </tr>
               </thead>
               <tbody>
-                {currentData?.map((book) => (
+                {booking?.map((book) => (
                     
 
                   
@@ -172,16 +173,16 @@ function ViewBook({ booking }) {
                     </td>
 
                     <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
-                      {book?.checkIn}
+                       {moment(book?.checkIn).format("DD-MM-YYYY")}
                     </td>
-                    {!book?.isCancel && today > book?.checkOut ? (
+                    {!book?.isCancel && today > moment(book?.checkOut).format("DD-MM-YYYY") ? (
                          <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
-                      {book?.checkOut}
+                       {moment(book?.checkOut).format("DD-MM-YYYY")}
                       <p className="text-green-500">Complete</p>
                     </td>
                     ):(
                       <td className="text-sm pr-6 whitespace-no-wrap text-black text-black tracking-normal leading-4">
-                      {book?.checkOut}
+                     {moment(book?.checkOut).format("DD-MM-YYYY")}
                     </td>
                     )}
                  
@@ -285,7 +286,7 @@ function ViewBook({ booking }) {
             </table>
           </div>
         </div>
-        <ReactPaginate className="flex space-x-4 text-lg text-bold text-sky-600 hover:text-sky-900 ml-2 mt-4"
+        {/* <ReactPaginate className="flex space-x-4 text-lg text-bold text-sky-600 hover:text-sky-900 ml-2 mt-4"
       previousLabel={'previous'}
       nextLabel={'next'}
       pageCount={pageCount}
@@ -295,7 +296,7 @@ function ViewBook({ booking }) {
       nextLinkClassName={'next_page'}
       disabledClassName={'disabled'}
       activeClassName={'active'}
-    />
+    /> */}
       </div>
     </>
   );

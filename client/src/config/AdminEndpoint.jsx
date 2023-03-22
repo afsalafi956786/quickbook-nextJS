@@ -64,16 +64,16 @@ export async function  propertyApprovel(roomId){
     }
 
 }
-export async function propertyReject(roomId){
-    try{
-        const {data}= await axios.post('/admin/propertyReject',{roomId})
-        return data;
+// export async function propertyReject(roomId){
+//     try{
+//         const {data}= await axios.post('/admin/propertyReject',{roomId})
+//         return data;
 
-    }catch(error){
-        return {status:'failed',message:'Network error'}
-    }
+//     }catch(error){
+//         return {status:'failed',message:'Network error'}
+//     }
 
-}
+// }
 
 
 // export async function propertyClick(header,roomid){
@@ -115,3 +115,38 @@ export async function getPropertyStatus(roomId,isBanned){
     }
 }
 
+export async function userCountFetch(header){
+    try{
+        const {data}=await axios.get('admin/getUsercount',{headers:header})
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function getallNotification(){
+    try{
+        const {data}=await axios.get('admin/getnotification')
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function removeNotification(notificationId){
+    try{
+        const {data}=await axios.delete(`admin/getnotification/${notificationId}`)
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function totalRevenue(){
+    try{
+        const {data}=await axios.get('admin/getadminGraph')
+        return data;
+    }catch(error){
+        return {status:'failed',message:'Network error'}
+    }
+}

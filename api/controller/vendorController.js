@@ -5,6 +5,11 @@ import jwt from "jsonwebtoken";
 import RoomModel from "../models/RoomSchem.js";
 import couponModel from "../models/couponShema.js";
 import bookingModel from "../models/bookingSchema.js";
+import mongoose from "mongoose";
+import reviewModel from '../models/reviewSchema.js'
+import moment from "moment/moment.js";
+import notificationModel from "../models/notificationSchema.js";
+
 
 export async function vendorCheck(req, res) {
   try {
@@ -172,7 +177,9 @@ export async function addRoom(req, res) {
   try {
     let obj = req.body;
 
+
     let vendorId = req.vendorId;
+    let roomName=await vendorModel.findById(vendorId)
     const room = await RoomModel.create({
       vendorId: vendorId,
       propertyType: obj.property,
@@ -195,6 +202,13 @@ export async function addRoom(req, res) {
       latitude: obj.latitude,
       location: obj.location,
     });
+    await notificationModel.create({
+      message:'Added compleated',
+      notification:`Vendor successfully added the Room.please check the ` +roomName.propertyName+'...',
+      status:'success'
+    })
+  
+
 
     res.json({ status: "success", message: "Room  added successfully" });
   } catch (error) {
@@ -242,8 +256,8 @@ export async function getEditRoom(req, res) {
 export async function editRoomData(req, res) {
   try {
     const obj = req.body;
-    console.log(obj, "aaaa");
     const roomId = req.params.roomId;
+    const roomName=await RoomModel.findById(roomId).populate('vendorId')
     if (obj.image != "") {
       await RoomModel.findByIdAndUpdate(roomId, {
         img: obj.image,
@@ -269,6 +283,11 @@ export async function editRoomData(req, res) {
       latitude: obj.latitude,
       location: obj.location,
     });
+    await notificationModel.create({
+      message:'Updated the Room',
+      notification:`Vendor have made some changes to the ` +roomName.vendorId.propertyName+'...',
+      status:'warning'
+    })
     res.json({ status: "success", message: "updated successfully" });
   } catch (error) {
     res.json({ status: "failed", message: "error.message" });
@@ -279,6 +298,11 @@ export async function delelteRoom(req, res) {
   try {
     const roomId = req.params.roomId;
     await RoomModel.findByIdAndDelete(roomId);
+    // await notificationModel.create({
+    //   message:'Deleted a Room',
+    //   notification:`Vendor has been deleted the Room ` +roomName.vendorId.propertyName+'...',
+    //   status:'danger'
+    // })
     res.json({ status: "success", message: "deleted successfully" });
   } catch (error) {
     res.json({ status: "failed", message: "error.message" });
@@ -296,6 +320,11 @@ export async function editProfile(req, res) {
       propertyName: obj.propertyName,
       propertyLocation: obj.propertyLocation,
     });
+    await notificationModel.create({
+      message:'Updated profile',
+      notification: `${obj.name} hase been updated his profile `,
+      status:'warning'
+    })
     res.json({
       status: "success",
       message: "updated successfully",
@@ -370,6 +399,106 @@ export async function getVendorId(req, res) {
     const user = await userModel.findById(userId);
     res.json({ user });
   } catch (error) {
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function vendorDashBoard(req,res){
+  try{
+    let vendorId = req.vendorId;
+    let totalBookings=await bookingModel.find({vendorId,isCancel:false}).count()
+    let getBookings=await bookingModel.find({vendorId}).populate('roomId').populate('vendorId').populate('userId').sort({createdAt: -1}).limit(5)
+    const bookingAmount=await bookingModel.aggregate([
+      {
+        $match:{vendorId:mongoose.Types.ObjectId(vendorId)}
+      },
+      {
+        $group:{
+          _id:null,
+          totalAmount:{$sum:'$total'}
+        }
+      }
+      
+    ]) 
+
+
+    let customers =await bookingModel.distinct("userId",{vendorId})
+    let customer=customers.length;
+    let users=await bookingModel.find({vendorId})
+    console.log(users.length)
+    res.json({totalBookings,getBookings,bookAmount:bookingAmount[0].totalAmount,customer})
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function fechroomDetails(req,res){
+  try{
+    const room=await RoomModel.find()
+    res.json({room})
+    
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function fetchReviews(req,res){
+  try{
+    const vendorId=req.vendorId
+    const reviews=await reviewModel.find({vendorId}).limit(3).populate('userId')
+    res.json(reviews)
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+export async function vendorGraph(req,res){
+  try{
+    let vendorId=req.vendorId
+    let totalRevenue=await bookingModel.aggregate([
+      {
+      $match:{vendorId:mongoose.Types.ObjectId(vendorId)}
+      },{
+        $project:{_id:0,createdAt:1,total:1}
+      }
+    ])
+    totalRevenue=totalRevenue.filter(obj=>{
+      obj.createdAt=moment(obj.createdAt).format('MMMM');
+      return obj
+    })
+
+    let month=[ 'January', 'February' , 'March' , 'April' , 'May' , 'June' , 'July' , 'August', 'September' , 'October' , 'November' , 'December' ]
+    for(let i=0;i<month.length;i++){
+      let f=0
+      totalRevenue.map((obj)=>{
+        if(obj.createdAt === month[i]){
+          f=f+obj.total
+        }
+      })
+      month[i]=f
+    }
+    res.json({monthSalary:month})
+    
+    
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+
+export async function getVendorSales(req,res){
+  try{
+    let vendorId=req.vendorId
+    // const salesReport=await bookingModel.aggregate([
+    //   {
+    //     $match: {
+    //       createdAt: { $gte: moment().startOf('month').format('YYYY-MM-DD') }
+    //     }
+    //   }
+    // ])
+    // console.log(salesReport,"fghjkhugfcv");
+    // console.log(moment().startOf('month').format('YYYY-MM-DD'));
+  }catch(error){
     return { status: "failed", message: "Network error" };
   }
 }

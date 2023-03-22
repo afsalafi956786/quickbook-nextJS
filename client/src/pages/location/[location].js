@@ -62,7 +62,6 @@ function location({location}) {
       <Newnav/>
       <div className="flex">
         <SideBar/>
-
         <RoomData location={location}/>
       </div>
     </>
@@ -75,7 +74,7 @@ export async function getServerSideProps(context){
   const data=await getLocation(context.params.location)
   return{
     props:{
-      location:data
+      location:data 
       
     }
   }

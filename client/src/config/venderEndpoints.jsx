@@ -166,4 +166,49 @@ export async function getUser(userId){
 
 }
 
+export async function vendorDash(header){
+    try{
+        const {data}=await axios.get('/vendor/vendorDash',{headers:header})
+        return data;
 
+    }catch(error){
+      return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function  fetchRooms(header){
+    try{
+        const {data}=await axios.get('/vendor/fetchrooms',{headers:header})
+        return data;
+    }catch(error){
+      return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function  vendorReview(header){
+    try{
+        const {data}=await axios.get('/vendor/vendorreview',{headers:header})
+        return data;
+    }catch(error){
+      return {status:'failed',message:'Network error'}
+    }
+}
+
+
+export async function  vendorGraph(header){
+    try{
+        const {data}=await axios.get('/vendor/vendorgraph',{headers:header})
+        return data;
+    }catch(error){
+      return {status:'failed',message:'Network error'}
+    }
+}
+
+export async function  getSalesReport(header){
+    try{
+        const {data}=await axios.get('/vendor/vendorsales',{headers:header})
+        return data;
+    }catch(error){
+      return {status:'failed',message:'Network error'}
+    }
+}

@@ -3,6 +3,10 @@ import jwt from "jsonwebtoken";
 import adminModel from "../models/adminShema.js";
 import userModel from "../models/userShema.js";
 import RoomModel from "../models/RoomSchem.js";
+import vendorModel from "../models/vendorShema.js";
+import notificationModel from "../models/notificationSchema.js";
+import bookingModel from "../models/bookingSchema.js";
+import moment from "moment/moment.js";
 
 export async function adminLogin(req, res) {
   try {
@@ -96,15 +100,15 @@ export async function propertyApprove(req, res) {
   }
 }
 
-  export async function propertyReject(req,res){
-    try{
-        const {roomId}=req.body;
-        await RoomModel.findByIdAndUpdate(roomId,{isRejected:true})
-        res.json({'status':'success','message':'Rejected succssfully'})
-    }catch(error){
-        res.json({status:'failed',message:error.message})
-    }
-  }
+  // export async function propertyReject(req,res){
+  //   try{
+  //       const {roomId}=req.body;
+  //       await RoomModel.findByIdAndUpdate(roomId,{isRejected:true})
+  //       res.json({'status':'success','message':'Rejected succssfully'})
+  //   }catch(error){
+  //       res.json({status:'failed',message:error.message})
+  //   }
+  // }
 
 //get proptery detials
 export async function getOneRoom(req, res) {
@@ -135,6 +139,89 @@ export async function getPropertystatus(req, res) {
     await RoomModel.findByIdAndUpdate(roomId, { isBanned: isBanned });
     res.json({ status: "success", message: "success ", roomId, isBanned });
   } catch (error) {
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function getallusersCount(req,res){
+  try{
+    ////
+   const usersCount=await userModel.find({}).count();
+   const proeprties=await vendorModel.find().count();
+   const totalrevenue=await bookingModel.aggregate([
+    {
+      $group:{
+        _id:null,
+        total:{$sum:'$total'}
+
+      }
+    }
+   ])
+  //  const newrev=await bookingModel.aggregate([
+  //   {
+
+  //     $group:{
+  //       _id:"$userId",
+  //       total: {$sum:'$total'},
+  //     }
+      
+  //   }
+  //  ])
+  //  console.log(newrev)
+  // const precentages=newrev.reduce((acc,curr)=>(acc+=curr.total*0.20),0)
+  // console.log(precentages)
+  // console.log(percentage)
+   res.json({usersCount,proeprties,totalrevenue})
+   
+
+  }catch(error){
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function getAllnotification(req,res){
+  try{
+     const notifications=await notificationModel.find().sort({createdAt: -1})
+     res.json({notifications})
+  }catch(error){
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function deleteNotificationId(req,res){
+  try{
+    const notificationId=req.params.notificationId;
+    await notificationModel.findByIdAndDelete(notificationId)
+    res.json({status:'success'})
+  }catch(error){
+    res.json({ status: "failed", message: error.message });
+  }
+}
+
+export async function getAdminGraph(req,res){
+  try{
+   let adminRevenue=await bookingModel.aggregate([
+    {
+      $project:{ _id:0,createdAt:1, total:1 }
+  }
+   ])
+   adminRevenue= adminRevenue.filter(obj=>{
+    obj.createdAt = moment(obj.createdAt).format('MMMM');
+    return obj
+})
+let month = [ 'January', 'February' , 'March' , 'April' , 'May' , 'June' , 'July' , 'August', 'September' , 'October' , 'November' , 'December' ]
+for (let i = 0; i < month.length; i++) {
+  let f = 0
+  adminRevenue.map((obj)=>{
+      if (obj.createdAt === month[i]) {
+          f = f + obj.total
+      }
+  })
+  month[i] = f
+}
+res.json({totalRevenue:month})
+  }catch(error){
+    console.log(error.message)
     res.json({ status: "failed", message: error.message });
   }
 }

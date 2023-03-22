@@ -1,6 +1,6 @@
 import express from "express";
 const router=express.Router();
-import { vendorSignup,vendorLogin,vendorData,vendorCheck,addRoom,getRoomview,getvendorRoom,getEditRoom,editRoomData,delelteRoom,editProfile,createCoupon ,viewCoupons, getallBookings,deleteCoupon,getVendorId} from '../controller/vendorController.js'
+import { vendorSignup,vendorLogin,getVendorSales,fechroomDetails,vendorGraph,fetchReviews,vendorData,vendorDashBoard,vendorCheck,addRoom,getRoomview,getvendorRoom,getEditRoom,editRoomData,delelteRoom,editProfile,createCoupon ,viewCoupons, getallBookings,deleteCoupon,getVendorId} from '../controller/vendorController.js'
 import { vendorJWT } from "../middleware/auth.js";
 
 
@@ -22,6 +22,11 @@ router.get('/viewcoupon',vendorJWT,viewCoupons)
 router.get('/viewbooking',vendorJWT, getallBookings)
 router.delete('/deletecoupn/:couponId',vendorJWT,deleteCoupon)
 router.get('/vendors/:userId',getVendorId)
+router.get('/vendorDash',vendorJWT,vendorDashBoard)
+router.get('/fetchrooms',vendorJWT,fechroomDetails)
+router.get('/vendorreview',vendorJWT,fetchReviews)
+router.get('/vendorgraph',vendorJWT,vendorGraph)
+router.get('/vendorsales',vendorJWT,getVendorSales)
 
 
 export default router;

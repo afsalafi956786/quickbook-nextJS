@@ -75,7 +75,7 @@ function CouponView({ coupons,setRefresh,refresh }) {
       }
   
     }else{
-      console.log('toast ann');
+      
       toast.error(`OOPS! All fields are required`, {
         position: "top-center",
         autoClose: 5000,

@@ -30,6 +30,9 @@ function Newnav() {
       key: "selection",
     },
   ]);
+ 
+
+ 
   const [suggestion, setSuggestion] = useState([]);
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
@@ -188,7 +191,7 @@ function Newnav() {
             <button
               className={styles.headerBtn}
               onClick={()=>{
-                router.push(`/location/${place}`)
+                router.push(`/location/${place}/${date.startDate}/${date.endDate}`)
             
               }}
             >

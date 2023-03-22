@@ -427,3 +427,46 @@ export async function getBookingDates(req,res){
     return { status: "failed", message: "Network error" };
   }
 }
+
+export async function getFilterAmenities (req,res){
+  let arr=[];
+  try{
+    // filter
+    let obj=req.body;
+    for (let key in obj) {
+      if(obj[key] !==null){
+        arr.push(obj[key])
+      }
+     
+    }
+    
+    console.log(arr)
+   let amenities= await RoomModel.find({'amenities':{$all:arr}})
+   res.json({amenities})
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+
+export async function getfilterCategories(req,res){
+  try{
+   let {deluxe,laxuary,familyRoom,noramlRoom,classic}=req.body;
+ let categories= await RoomModel.find({'category':{$in:[deluxe,laxuary,familyRoom,noramlRoom,classic]}}).populate('vendorId')
+   res.json({categories})
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}
+
+
+
+export async function getPropertyType(req,res){
+  try{
+   let {Hotel,Resort,HomeStay}=req.body;
+ let type= await RoomModel.find({'propertyType':{$in:[Hotel,HomeStay,Resort]}}).populate('vendorId')
+   res.json({type})
+  }catch(error){
+    return { status: "failed", message: "Network error" };
+  }
+}

@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import moment from "moment/moment";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -19,7 +20,7 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function RecentBook() {
+export default function RecentBook({recent}) {
   return (
     <div className=' xs:px-3'>
         <h3 className='mt-12 pb-6 px-8 font-bold text-lg'>Recent Bookings</h3>
@@ -30,26 +31,31 @@ export default function RecentBook() {
       <Table sx={{ minWidth: 650 ,backgroundColor:'#e1f5fe',padding:'10px'}} aria-label="simple table ">
         <TableHead >
           <TableRow >
-            <TableCell sx={{fontWeight:'bold',border:'none'}}>Dessert (100g serving)</TableCell>
-            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Calories</TableCell>
-            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Fat&nbsp;(g)</TableCell>
-            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Carbs&nbsp;(g)</TableCell>
-            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Protein&nbsp;(g)</TableCell>
+            <TableCell sx={{fontWeight:'bold',border:'none'}}>Booking Id</TableCell>
+            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Customers</TableCell>
+            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Total </TableCell>
+            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Status</TableCell>
+            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Check-in</TableCell>
+            <TableCell sx={{fontWeight:'bold',border:'none'}} align="left">Check-out</TableCell>
           </TableRow>
         </TableHead>
         <TableBody >
-          {rows.map((row) => (
+          {recent?.getBookings?.map((booking) => (
             <TableRow 
-              key={row.name}
+              key={booking?._id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row" sx={{border:'none'}}>
-                {row.name}
+                {/* {row.name} */}{booking._id?.substring(0,6)}
               </TableCell>
-              <TableCell sx={{border:'none'}} align="left">{row.calories}</TableCell>
-              <TableCell sx={{border:'none'}} align="left">{row.fat}</TableCell>
-              <TableCell sx={{border:'none'}} align="left">{row.carbs}</TableCell>
-              <TableCell sx={{border:'none'}} align="left">{row.protein}</TableCell>
+             
+              <TableCell  sx={{border:'none'}} align="left">{booking?.userId?.name}</TableCell>
+              <TableCell sx={{border:'none'}} align="left">{booking?.total}</TableCell>
+              {booking?.isCancel ? <TableCell sx={{border:'none', color:'red'}} align="left">Cancel</TableCell> :
+               <TableCell sx={{border:'none',color:'green'}} align="left">Active</TableCell> }
+               <TableCell sx={{border:'none'}} align="left">{moment(booking?.checkIn).format("DD-MM-YYYY") }</TableCell>
+               <TableCell sx={{border:'none'}} align="left">{ moment(booking?.checkOut).format("DD-MM-YYYY")}</TableCell>
+             
             </TableRow>
           ))}
         </TableBody>

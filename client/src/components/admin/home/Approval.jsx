@@ -1,7 +1,7 @@
 import React from "react";
 import swal from "sweetalert";
 
-import { propertyApprovel, propertyReject } from "@/config/AdminEndpoint";
+import { propertyApprovel} from "@/config/AdminEndpoint";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -89,7 +89,7 @@ function Approval({ room, setRefresh, refresh }) {
 
               <div>
                 <h4 className="text-sky-600">Action</h4>
-                <button
+                {/* <button
                   onClick={async () => {
                     swal({
                       title: "Are you sure?",
@@ -120,7 +120,7 @@ function Approval({ room, setRefresh, refresh }) {
                   className="text-white mt-4 bg-red-700 hover:bg-green-800 focus:outline-none font-medium rounded-xl text-sm px-6 py-2.5 text-center mr-2   dark:hover:bg-red-800 "
                 >
                   Reject
-                </button>
+                </button> */}
                 <button
                   onClick={async () => {
                     swal({
